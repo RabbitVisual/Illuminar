@@ -84,6 +84,29 @@
                         <span>Papéis</span>
                     </a>
                 @endif
+                @if (Route::has('catalog.products.index'))
+                    <div class="pt-2 mt-2 border-t border-border dark:border-border">
+                        <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                            <x-icon name="box-open" style="duotone" class="w-4 h-4" />
+                            Catálogo
+                        </p>
+                        <a href="{{ route('catalog.products.index') }}"
+                           class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                            <x-icon name="box-open" style="duotone" />
+                            <span>Produtos</span>
+                        </a>
+                        <a href="{{ route('catalog.categories.index') }}"
+                           class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                            <x-icon name="tags" style="duotone" />
+                            <span>Categorias</span>
+                        </a>
+                        <a href="{{ route('catalog.brands.index') }}"
+                           class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                            <x-icon name="copyright" style="duotone" />
+                            <span>Marcas</span>
+                        </a>
+                    </div>
+                @endif
             </nav>
             <div class="border-t border-border dark:border-border p-4 space-y-1">
                 <button type="button"
