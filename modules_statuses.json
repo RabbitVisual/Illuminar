@@ -7,5 +7,7 @@
     "StorePanel": true,
     "Admin": true,
     "Storefront": true,
-    "CustomerPanel": true
+    "CustomerPanel": true,
+    "Shipping": true,
+    "Payment": true
 }

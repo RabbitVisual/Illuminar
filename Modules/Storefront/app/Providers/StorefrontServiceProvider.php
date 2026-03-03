@@ -33,6 +33,8 @@ class StorefrontServiceProvider extends ServiceProvider
     protected function registerBladeComponents(): void
     {
         Blade::component('storefront::layouts.public', 'storefront::layouts.public');
+        Blade::component('storefront::components.navbar', 'storefront::navbar');
+        Blade::component('storefront::components.footer', 'storefront::footer');
     }
 
     /**

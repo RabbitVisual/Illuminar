@@ -29,61 +29,16 @@
 
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 </head>
-<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen">
+<body class="font-sans antialiased bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100 min-h-screen overflow-x-hidden flex flex-col">
     <x-loading-overlay />
 
-    {{-- Header Público --}}
-    <header class="sticky top-0 z-40 border-b border-gray-200 dark:border-gray-700 bg-white/95 dark:bg-gray-900/95 backdrop-blur-sm">
-        <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-            <div class="flex h-16 items-center justify-between gap-4">
-                <a href="{{ route('storefront.index') }}" class="font-display font-bold text-xl text-primary dark:text-primary shrink-0">
-                    Illuminar
-                </a>
-
-                <nav class="flex items-center gap-4">
-                    <a href="{{ route('storefront.index') }}"
-                       class="text-sm font-medium text-gray-700 dark:text-gray-300 hover:text-primary dark:hover:text-primary transition-colors">
-                        Início
-                    </a>
-
-                    <button type="button"
-                            @click="darkMode = !darkMode"
-                            class="p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors"
-                            aria-label="Alternar tema">
-                        <x-icon name="sun-bright" style="duotone" class="block dark:hidden w-5 h-5" />
-                        <x-icon name="moon" style="duotone" class="hidden dark:block w-5 h-5" />
-                    </button>
-
-                    <a href="{{ route('storefront.cart') }}"
-                       class="relative inline-flex items-center gap-2 rounded-lg px-3 py-2 text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-800 transition-colors">
-                        <x-icon name="cart-shopping" style="duotone" class="w-5 h-5" />
-                        <span x-show="cart.length > 0"
-                              x-cloak
-                              x-transition
-                              class="absolute -top-1 -right-1 flex h-5 w-5 items-center justify-center rounded-full bg-primary text-xs font-bold text-white"
-                              x-text="cart.length"></span>
-                    </a>
-
-                    @auth
-                        <a href="{{ route('admin.index') }}"
-                           class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
-                            <x-icon name="user" style="duotone" class="w-4 h-4" />
-                            Minha Conta
-                        </a>
-                    @else
-                        <a href="{{ route('login') }}"
-                           class="inline-flex items-center gap-2 rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors">
-                            Entrar
-                        </a>
-                    @endauth
-                </nav>
-            </div>
-        </div>
-    </header>
+    <x-storefront::navbar />
 
     <main class="flex-1">
         {{ $slot }}
     </main>
+
+    <x-storefront::footer />
 
     <script>
         function storefrontCart() {
@@ -101,7 +56,7 @@
                     }
                 },
 
-                saveCartToStorage() {
+                saveCartFromStorage() {
                     localStorage.setItem(this.CART_KEY, JSON.stringify(this.cart));
                 },
 
@@ -124,12 +79,12 @@
                             stock: product.stock ?? 999
                         });
                     }
-                    this.saveCartToStorage();
+                    this.saveCartFromStorage();
                 },
 
                 removeFromCart(productId) {
                     this.cart = this.cart.filter(item => item.product_id !== productId);
-                    this.saveCartToStorage();
+                    this.saveCartFromStorage();
                 },
 
                 updateQty(productId, qty) {
@@ -139,7 +94,7 @@
                     const maxQty = item.stock !== undefined ? Math.min(numQty, item.stock) : numQty;
                     item.quantity = Math.max(1, maxQty);
                     item.subtotal = item.price * item.quantity;
-                    this.saveCartToStorage();
+                    this.saveCartFromStorage();
                 },
 
                 getCartTotal() {
@@ -153,7 +108,7 @@
 
                 clearCart() {
                     this.cart = [];
-                    this.saveCartToStorage();
+                    this.saveCartFromStorage();
                 }
             };
         }

@@ -90,3 +90,191 @@
     --color-warning: #fbbf24;
     --color-danger: #f87171;
 }
+
+/* Storefront: Animações e tema iluminação */
+@keyframes fade-in-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes glow-pulse {
+    0%, 100% {
+        opacity: 0.6;
+        filter: blur(40px);
+    }
+    50% {
+        opacity: 0.9;
+        filter: blur(60px);
+    }
+}
+
+@keyframes float {
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-8px);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes cart-badge-pop {
+    0% {
+        transform: scale(1.2);
+    }
+    50% {
+        transform: scale(1.4);
+    }
+    100% {
+        transform: scale(1);
+    }
+}
+
+.animate-fade-in-up {
+    animation: fade-in-up 0.6s ease-out forwards;
+}
+
+.animate-glow-pulse {
+    animation: glow-pulse 2.5s ease-in-out infinite;
+}
+
+.animate-float {
+    animation: float 3s ease-in-out infinite;
+}
+
+.animate-float-delayed {
+    animation: float 3s ease-in-out 0.5s infinite;
+}
+
+.animate-float-delayed-2 {
+    animation: float 3s ease-in-out 0.8s infinite;
+}
+
+.animate-cart-pop {
+    animation: cart-badge-pop 0.4s ease-out;
+}
+
+.storefront-hero-glow {
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(251, 191, 36, 0.15) 0%, transparent 60%);
+}
+
+.dark .storefront-hero-glow {
+    background: radial-gradient(ellipse 80% 50% at 50% 0%, rgba(251, 191, 36, 0.2) 0%, transparent 60%);
+}
+
+.storefront-card-hover {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.storefront-card-hover:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.1), 0 8px 10px -6px rgb(0 0 0 / 0.1), 0 0 0 1px rgba(251, 191, 36, 0.1);
+}
+
+.dark .storefront-card-hover:hover {
+    box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.3), 0 0 0 1px rgba(251, 191, 36, 0.15);
+}
+
+.storefront-product-glow {
+    transition: all 0.3s ease;
+}
+
+.storefront-product-glow:hover .storefront-product-icon {
+    color: rgb(251 191 36 / 0.8);
+    filter: drop-shadow(0 0 12px rgba(251, 191, 36, 0.4));
+}
+
+/* Homepage: animações de iluminação e eletricidade */
+@keyframes light-glow {
+    0%, 100% {
+        opacity: 0.4;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.7;
+        transform: scale(1.05);
+    }
+}
+
+@keyframes electric-pulse {
+    0%, 100% {
+        opacity: 0.6;
+        box-shadow: 0 0 20px rgba(251, 191, 36, 0.3);
+    }
+    50% {
+        opacity: 1;
+        box-shadow: 0 0 40px rgba(251, 191, 36, 0.5);
+    }
+}
+
+@keyframes light-ray {
+    0% {
+        opacity: 0;
+        transform: scaleY(0) translateY(-100%);
+    }
+    50% {
+        opacity: 0.15;
+    }
+    100% {
+        opacity: 0;
+        transform: scaleY(1) translateY(0);
+    }
+}
+
+@keyframes bulb-glow {
+    0%, 100% {
+        filter: drop-shadow(0 0 8px rgba(251, 191, 36, 0.4));
+    }
+    50% {
+        filter: drop-shadow(0 0 20px rgba(251, 191, 36, 0.7));
+    }
+}
+
+@keyframes scale-in {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+.animate-light-glow {
+    animation: light-glow 3s ease-in-out infinite;
+}
+
+.animate-electric-pulse {
+    animation: electric-pulse 2.5s ease-in-out infinite;
+}
+
+.animate-bulb-glow {
+    animation: bulb-glow 2s ease-in-out infinite;
+}
+
+.animate-scale-in {
+    animation: scale-in 0.5s ease-out forwards;
+}
+
+.storefront-hero-light-orb {
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.25) 0%, rgba(251, 191, 36, 0.05) 40%, transparent 70%);
+}
+
+.dark .storefront-hero-light-orb {
+    background: radial-gradient(circle, rgba(251, 191, 36, 0.35) 0%, rgba(251, 191, 36, 0.08) 40%, transparent 70%);
+}

@@ -1,0 +1,33 @@
+{
+    "name": "vertex/shipping",
+    "version": "1.0.0",
+    "description": "Module shipping - © Vertex Solutions LTDA - 2026 - VS.1.0",
+    "authors": [
+        {
+            "name": "Reinan Rodrigues",
+            "email": "r.rodriguesjs@gmail.com",
+            "homepage": "https://vertexsolutions.com.br",
+            "role": "Developer"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Shipping\\": "app/",
+            "Modules\\Shipping\\Database\\Factories\\": "database/factories/",
+            "Modules\\Shipping\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Shipping\\Tests\\": "tests/"
+        }
+    }
+}

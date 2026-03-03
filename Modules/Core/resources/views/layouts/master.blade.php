@@ -54,9 +54,8 @@
         <aside class="fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-white dark:bg-surface border-r border-border dark:border-border transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-200 ease-out"
                :class="{ 'translate-x-0': sidebarOpen }">
             <div class="flex h-16 items-center justify-between gap-2 border-b border-border dark:border-border px-4 lg:px-6">
-                <a href="@role('Customer'){{ route('customer.index') }}@else{{ Route::has('admin.index') ? route('admin.index') : url('/core') }}@endrole" class="flex items-center gap-2 font-display font-bold text-lg text-primary dark:text-primary">
-                    <x-icon name="lightbulb" style="duotone" class="text-2xl" />
-                    <span>Illuminar</span>
+                <a href="@role('Customer'){{ route('customer.index') }}@else{{ Route::has('admin.index') ? route('admin.index') : url('/core') }}@endrole" class="flex items-center shrink-0">
+                    <x-core::logo height="h-8" class="w-auto max-w-[140px]" />
                 </a>
                 <button type="button"
                         @click="sidebarOpen = false"
@@ -189,8 +188,8 @@
                         @click="darkMode = !darkMode"
                         class="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
                         aria-label="Alternar tema">
-                    <x-icon name="sun-bright" style="duotone" class="block dark:hidden w-5" />
-                    <x-icon name="moon" style="duotone" class="hidden dark:block w-5" />
+                    <span x-show="!darkMode" x-cloak><x-icon name="sun-bright" style="duotone" class="w-5" /></span>
+                    <span x-show="darkMode" x-cloak><x-icon name="moon" style="duotone" class="w-5" /></span>
                     <span x-text="darkMode ? 'Claro' : 'Escuro'">Tema</span>
                 </button>
                 @auth
@@ -243,8 +242,8 @@
                         @click="darkMode = !darkMode"
                         class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 lg:hidden"
                         aria-label="Alternar tema">
-                    <x-icon name="sun-bright" style="duotone" class="block dark:hidden w-5 h-5" />
-                    <x-icon name="moon" style="duotone" class="hidden dark:block w-5 h-5" />
+                    <span x-show="!darkMode" x-cloak><x-icon name="sun-bright" style="duotone" class="w-5 h-5" /></span>
+                    <span x-show="darkMode" x-cloak><x-icon name="moon" style="duotone" class="w-5 h-5" /></span>
                 </button>
             </header>
 

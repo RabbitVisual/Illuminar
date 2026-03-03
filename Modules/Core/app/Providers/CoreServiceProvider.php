@@ -37,6 +37,7 @@ class CoreServiceProvider extends ServiceProvider
     {
         Blade::component('core::components.loading-overlay', 'loading-overlay');
         Blade::component('core::components.icon', 'icon');
+        Blade::component('core::components.logo', 'core::logo');
         Blade::component('core::layouts.master', 'core::layouts.master');
         Blade::component('core::layouts.auth', 'core::layouts.auth');
     }

@@ -2,8 +2,8 @@
     <div class="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-12">
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-12">
             {{-- Imagem --}}
-            <div class="aspect-square rounded-xl bg-gray-100 dark:bg-gray-800 flex items-center justify-center overflow-hidden">
-                <x-icon name="lightbulb" style="duotone" class="w-48 h-48 text-gray-400 dark:text-gray-500" />
+            <div class="aspect-square rounded-xl bg-gradient-to-br from-gray-100 to-amber-500/5 dark:from-gray-800 dark:to-amber-500/10 flex items-center justify-center overflow-hidden group">
+                <x-icon name="lightbulb" style="duotone" class="w-48 h-48 text-gray-400 dark:text-gray-500 group-hover:text-amber-500/60 transition-colors duration-300" />
             </div>
 
             {{-- Detalhes --}}
@@ -14,7 +14,7 @@
                 @if ($product->sku)
                     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">SKU: {{ $product->sku }}</p>
                 @endif
-                <p class="mt-4 text-2xl font-bold text-primary dark:text-primary">
+                <p class="mt-4 text-2xl font-bold text-amber-600 dark:text-amber-400">
                     {{ $product->price_formatted }}
                 </p>
 
@@ -31,25 +31,25 @@
                     <ul class="space-y-2 text-gray-600 dark:text-gray-400">
                         @if ($product->voltage)
                             <li class="flex items-center gap-2">
-                                <x-icon name="bolt" style="solid" class="w-4 h-4 text-primary shrink-0" />
+                                <x-icon name="bolt" style="solid" class="w-4 h-4 text-amber-500 shrink-0" />
                                 <span>Voltagem: {{ $product->voltage }}</span>
                             </li>
                         @endif
                         @if ($product->power_watts)
                             <li class="flex items-center gap-2">
-                                <x-icon name="gauge-high" style="solid" class="w-4 h-4 text-primary shrink-0" />
+                                <x-icon name="gauge-high" style="solid" class="w-4 h-4 text-amber-500 shrink-0" />
                                 <span>Potência: {{ $product->power_watts }} W</span>
                             </li>
                         @endif
                         @if ($product->color_temperature_k)
                             <li class="flex items-center gap-2">
-                                <x-icon name="palette" style="solid" class="w-4 h-4 text-primary shrink-0" />
+                                <x-icon name="palette" style="solid" class="w-4 h-4 text-amber-500 shrink-0" />
                                 <span>Temperatura de Cor: {{ $product->color_temperature_k }} K</span>
                             </li>
                         @endif
                         @if ($product->lumens)
                             <li class="flex items-center gap-2">
-                                <x-icon name="sun" style="solid" class="w-4 h-4 text-primary shrink-0" />
+                                <x-icon name="sun" style="solid" class="w-4 h-4 text-amber-500 shrink-0" />
                                 <span>Lúmens: {{ $product->lumens }} lm</span>
                             </li>
                         @endif
@@ -72,7 +72,7 @@
                     <button type="button"
                             @click="$dispatch('illuminar-add-to-cart', product)"
                             :disabled="product.stock < 1"
-                            class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-primary px-6 py-3 text-base font-medium text-white hover:opacity-90 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed">
+                            class="inline-flex w-full sm:w-auto items-center justify-center gap-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 text-base font-medium text-gray-900 hover:from-amber-400 hover:to-amber-500 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed">
                         <x-icon name="cart-plus" style="solid" class="w-5 h-5" />
                         Adicionar ao Carrinho
                     </button>

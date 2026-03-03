@@ -6,23 +6,87 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use Modules\Catalog\Models\Category;
 use Modules\Catalog\Models\Product;
 use Modules\Sales\Models\Order;
 use Modules\Sales\Services\OrderService;
 
 class StorefrontController extends Controller
 {
-    public function index(): View
+    public function index(Request $request): View
     {
-        $products = Product::query()
+        $productsQuery = Product::query()
             ->where('is_active', true)
             ->where('stock', '>', 0)
-            ->with(['brand', 'category'])
+            ->with(['brand', 'category']);
+
+        if ($request->filled('category')) {
+            $productsQuery->whereHas('category', fn ($q) => $q->where('slug', $request->category));
+        }
+
+        $products = $productsQuery
             ->latest()
-            ->take(8)
+            ->take(12)
             ->get();
 
-        return view('storefront::index', compact('products'));
+        $categories = Category::query()
+            ->where('is_active', true)
+            ->whereHas('products', fn ($q) => $q->where('is_active', true))
+            ->withCount(['products' => fn ($q) => $q->where('is_active', true)])
+            ->having('products_count', '>', 0)
+            ->orderBy('name')
+            ->get();
+
+        return view('storefront::index', compact('products', 'categories'));
+    }
+
+    public function catalog(Request $request): View
+    {
+        $productsQuery = Product::query()
+            ->where('is_active', true)
+            ->where('stock', '>', 0)
+            ->with(['brand', 'category']);
+
+        if ($request->filled('category')) {
+            $productsQuery->whereHas('category', fn ($q) => $q->where('slug', $request->category));
+        }
+
+        $sort = $request->get('sort', 'latest');
+
+        switch ($sort) {
+            case 'price_asc':
+                $productsQuery->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $productsQuery->orderBy('price', 'desc');
+                break;
+            case 'name_asc':
+                $productsQuery->orderBy('name', 'asc');
+                break;
+            case 'name_desc':
+                $productsQuery->orderBy('name', 'desc');
+                break;
+            case 'latest':
+            default:
+                $productsQuery->latest();
+                break;
+        }
+
+        $products = $productsQuery
+            ->paginate(24)
+            ->withQueryString();
+
+        $categories = Category::query()
+            ->where('is_active', true)
+            ->whereHas('products', fn ($q) => $q->where('is_active', true))
+            ->withCount(['products' => fn ($q) => $q->where('is_active', true)])
+            ->having('products_count', '>', 0)
+            ->orderBy('name')
+            ->get();
+
+        $currentCategory = $request->get('category');
+
+        return view('storefront::catalog', compact('products', 'categories', 'sort', 'currentCategory'));
     }
 
     public function product(string $slug): View

@@ -8,7 +8,7 @@
             <x-icon name="cart-shopping" style="duotone" class="w-16 h-16 mx-auto mb-4 text-gray-400 dark:text-gray-500" />
             <p class="text-gray-600 dark:text-gray-400 mb-4">Seu carrinho está vazio.</p>
             <a href="{{ route('storefront.index') }}"
-               class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+               class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-4 py-2 text-sm font-medium text-gray-900 hover:from-amber-400 hover:to-amber-500 transition-all duration-300">
                 <x-icon name="arrow-left" style="solid" class="w-4 h-4" />
                 Continuar Comprando
             </a>
@@ -73,7 +73,7 @@
 
             <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
                 <a href="{{ route('storefront.index') }}"
-                   class="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-primary dark:hover:text-primary">
+                   class="inline-flex items-center gap-2 text-gray-600 dark:text-gray-400 hover:text-amber-600 dark:hover:text-amber-400 transition-colors">
                     <x-icon name="arrow-left" style="solid" class="w-4 h-4" />
                     Continuar Comprando
                 </a>
@@ -82,7 +82,7 @@
                         Total: <span x-text="formatMoney(getCartTotal())"></span>
                     </span>
                     <a href="{{ route('storefront.checkout') }}"
-                       class="inline-flex items-center gap-2 rounded-lg bg-primary px-6 py-3 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+                       class="inline-flex items-center gap-2 rounded-lg bg-gradient-to-r from-amber-500 to-amber-600 px-6 py-3 text-sm font-medium text-gray-900 hover:from-amber-400 hover:to-amber-500 transition-all duration-300">
                         <x-icon name="credit-card" style="solid" class="w-4 h-4" />
                         Finalizar Compra
                     </a>
