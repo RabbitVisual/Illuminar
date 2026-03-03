@@ -188,6 +188,14 @@
                         {{ $heading ?? 'Painel' }}
                     </h1>
                 </div>
+                @if (Route::has('storefront.index'))
+                    <a href="{{ route('storefront.index') }}"
+                       target="_blank"
+                       class="inline-flex items-center gap-2 rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors">
+                        <x-icon name="store" style="duotone" class="w-5 h-5" />
+                        <span class="hidden sm:inline">Ver Loja</span>
+                    </a>
+                @endif
                 @if (Route::has('pdv.index'))
                     <a href="{{ route('pdv.index') }}"
                        target="_blank"

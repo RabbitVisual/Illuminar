@@ -26,7 +26,13 @@ class StorefrontServiceProvider extends ServiceProvider
         $this->registerTranslations();
         $this->registerConfig();
         $this->registerViews();
+        $this->registerBladeComponents();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+    }
+
+    protected function registerBladeComponents(): void
+    {
+        Blade::component('storefront::layouts.public', 'storefront::layouts.public');
     }
 
     /**
