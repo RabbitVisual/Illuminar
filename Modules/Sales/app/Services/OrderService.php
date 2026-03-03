@@ -7,6 +7,8 @@ use Modules\Catalog\Models\Product;
 use Modules\Inventory\Models\InventoryTransaction;
 use Modules\Sales\Models\Order;
 use Modules\Sales\Models\OrderItem;
+use Modules\Shipping\Models\Shipment;
+use Modules\Shipping\Models\ShippingMethod;
 
 class OrderService
 {
@@ -14,7 +16,7 @@ class OrderService
     {
         return DB::transaction(function () use ($data, $items) {
             $orderNumber = $this->generateOrderNumber();
-            $totalAmount = 0;
+            $subtotalAmount = 0;
             $orderItems = [];
 
             foreach ($items as $item) {
@@ -27,7 +29,7 @@ class OrderService
                 }
 
                 $subtotal = $unitPrice * $quantity;
-                $totalAmount += $subtotal;
+                $subtotalAmount += $subtotal;
 
                 $orderItems[] = [
                     'product_id' => $product->id,
@@ -37,13 +39,21 @@ class OrderService
                 ];
             }
 
+            $shippingAmount = (int) ($data['shipping_amount'] ?? 0);
+            $shippingMethodId = $data['shipping_method_id'] ?? null;
+            $totalAmount = $subtotalAmount + $shippingAmount;
+
             $order = Order::create([
                 'order_number' => $orderNumber,
                 'user_id' => $data['user_id'] ?? auth()->id(),
                 'customer_id' => $data['customer_id'] ?? null,
                 'status' => $data['status'] ?? Order::STATUS_PENDING,
                 'total_amount' => $totalAmount,
+                'shipping_amount' => $shippingAmount,
+                'shipping_method_id' => $shippingMethodId,
                 'payment_method' => $data['payment_method'] ?? null,
+                'payment_gateway_id' => $data['payment_gateway_id'] ?? null,
+                'payment_status' => $data['payment_status'] ?? null,
                 'origin' => $data['origin'] ?? Order::ORIGIN_POS,
             ]);
 
@@ -64,6 +74,15 @@ class OrderService
                     'quantity' => $orderItem->quantity,
                     'unit_cost' => 0,
                     'description' => "Venda - Pedido {$order->order_number}",
+                ]);
+            }
+
+            if ($shippingMethodId && $shippingAmount > 0) {
+                Shipment::create([
+                    'order_id' => $order->id,
+                    'shipping_method_id' => $shippingMethodId,
+                    'shipping_amount' => $shippingAmount,
+                    'status' => Shipment::STATUS_PENDING,
                 ]);
             }
 

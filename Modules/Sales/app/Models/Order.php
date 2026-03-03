@@ -6,7 +6,10 @@ use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Core\Helpers\UtilsHelper;
+use Modules\Shipping\Models\Shipment;
+use Modules\Shipping\Models\ShippingMethod;
 
 class Order extends Model
 {
@@ -28,7 +31,11 @@ class Order extends Model
         'customer_id',
         'status',
         'total_amount',
+        'shipping_amount',
+        'shipping_method_id',
         'payment_method',
+        'payment_gateway_id',
+        'payment_status',
         'origin',
     ];
 
@@ -45,6 +52,26 @@ class Order extends Model
     public function items(): HasMany
     {
         return $this->hasMany(OrderItem::class);
+    }
+
+    public function shippingMethod(): BelongsTo
+    {
+        return $this->belongsTo(ShippingMethod::class);
+    }
+
+    public function shipment(): HasOne
+    {
+        return $this->hasOne(Shipment::class);
+    }
+
+    public function payments(): HasMany
+    {
+        return $this->hasMany(\Modules\Payment\Models\Payment::class);
+    }
+
+    public function paymentGateway(): BelongsTo
+    {
+        return $this->belongsTo(\Modules\Payment\Models\PaymentGateway::class, 'payment_gateway_id');
     }
 
     public function getTotalFormattedAttribute(): string

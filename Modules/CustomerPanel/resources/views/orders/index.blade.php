@@ -20,7 +20,8 @@
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Número</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Data</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Total</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Status</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Status do Pedido</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Pagamento</th>
                             <th scope="col" class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Ações</th>
                         </tr>
                     </thead>
@@ -44,6 +45,16 @@
                                         {{ $order->status_label }}
                                     </span>
                                 </td>
+                                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                                    @if ($order->payment_status)
+                                        @php
+                                            $paymentLabel = ucfirst(str_replace('_', ' ', $order->payment_status));
+                                        @endphp
+                                        <span>{{ $paymentLabel }}</span>
+                                    @else
+                                        <span class="text-gray-400 dark:text-gray-500">Aguardando processamento</span>
+                                    @endif
+                                </td>
                                 <td class="px-4 py-3 text-right">
                                     <a href="{{ route('customer.orders.show', $order->order_number) }}"
                                        class="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
@@ -54,7 +65,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="5" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                                <td colspan="6" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                                     Nenhum pedido encontrado.
                                 </td>
                             </tr>

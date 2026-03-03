@@ -96,8 +96,10 @@
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Número</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Data</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Cliente</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Itens</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Total</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Status</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Pagamento</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Origem</th>
                             <th scope="col" class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Ações</th>
                         </tr>
@@ -108,6 +110,7 @@
                                 <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $order->order_number }}</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $order->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $order->customer?->full_name ?? 'Consumidor Final' }}</td>
+                                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $order->items_count }}</td>
                                 <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $order->total_formatted }}</td>
                                 <td class="px-4 py-3">
                                     @php
@@ -123,6 +126,13 @@
                                         {{ $order->status_label }}
                                     </span>
                                 </td>
+                                <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
+                                    @if ($order->payment_status)
+                                        {{ ucfirst(str_replace('_', ' ', $order->payment_status)) }}
+                                    @else
+                                        <span class="text-gray-400 dark:text-gray-500">Aguardando</span>
+                                    @endif
+                                </td>
                                 <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $order->origin_label }}</td>
                                 <td class="px-4 py-3 text-right">
                                     <a href="{{ route('sales.orders.show', $order) }}"
@@ -134,7 +144,7 @@
                             </tr>
                         @empty
                             <tr>
-                                <td colspan="7" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
+                                <td colspan="9" class="px-4 py-8 text-center text-sm text-gray-500 dark:text-gray-400">
                                     Nenhum pedido encontrado.
                                 </td>
                             </tr>

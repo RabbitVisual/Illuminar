@@ -46,7 +46,7 @@ class CustomerPanelController extends Controller
     {
         $order = Order::where('customer_id', Auth::id())
             ->where('order_number', $order_number)
-            ->with(['items.product'])
+            ->with(['items.product', 'paymentGateway'])
             ->firstOrFail();
 
         return view('customerpanel::orders.show', compact('order'));

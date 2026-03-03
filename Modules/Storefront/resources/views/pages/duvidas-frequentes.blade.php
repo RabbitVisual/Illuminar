@@ -38,7 +38,7 @@
                     class="flex w-full items-center justify-between gap-4 bg-white dark:bg-gray-800/60 px-6 py-4 text-left transition-colors hover:bg-amber-500/5 dark:hover:bg-amber-400/5 focus:outline-none focus:bg-amber-500/5 dark:focus:bg-amber-400/5"
                     :aria-expanded="open === '{{ $faq['id'] }}'">
                 <span class="font-medium text-gray-900 dark:text-white">{{ $faq['q'] }}</span>
-                <x-icon name="chevron-down" style="solid" class="w-4 h-4 text-amber-500 shrink-0 transition-transform duration-300" :class="{ 'rotate-180': open === '{{ $faq['id'] }}' }" />
+                <x-icon name="chevron-down" style="solid" class="w-4 h-4 text-amber-500 shrink-0 transition-transform duration-300" x-bind:class="{ 'rotate-180': open === '{{ $faq['id'] }}' }" />
             </button>
             <div x-show="open === '{{ $faq['id'] }}'"
                  x-cloak
@@ -68,7 +68,7 @@
                     class="flex w-full items-center justify-between gap-4 bg-white dark:bg-gray-800/60 px-6 py-4 text-left transition-colors hover:bg-amber-500/5 dark:hover:bg-amber-400/5 focus:outline-none"
                     :aria-expanded="open === '{{ $faq['id'] }}'">
                 <span class="font-medium text-gray-900 dark:text-white">{{ $faq['q'] }}</span>
-                <x-icon name="chevron-down" style="solid" class="w-4 h-4 text-amber-500 shrink-0 transition-transform duration-300" :class="{ 'rotate-180': open === '{{ $faq['id'] }}' }" />
+                <x-icon name="chevron-down" style="solid" class="w-4 h-4 text-amber-500 shrink-0 transition-transform duration-300" x-bind:class="{ 'rotate-180': open === '{{ $faq['id'] }}' }" />
             </button>
             <div x-show="open === '{{ $faq['id'] }}'"
                  x-cloak
@@ -98,7 +98,7 @@
                     class="flex w-full items-center justify-between gap-4 bg-white dark:bg-gray-800/60 px-6 py-4 text-left transition-colors hover:bg-amber-500/5 dark:hover:bg-amber-400/5 focus:outline-none"
                     :aria-expanded="open === '{{ $faq['id'] }}'">
                 <span class="font-medium text-gray-900 dark:text-white">{{ $faq['q'] }}</span>
-                <x-icon name="chevron-down" style="solid" class="w-4 h-4 text-amber-500 shrink-0 transition-transform duration-300" :class="{ 'rotate-180': open === '{{ $faq['id'] }}' }" />
+                <x-icon name="chevron-down" style="solid" class="w-4 h-4 text-amber-500 shrink-0 transition-transform duration-300" x-bind:class="{ 'rotate-180': open === '{{ $faq['id'] }}' }" />
             </button>
             <div x-show="open === '{{ $faq['id'] }}'"
                  x-cloak
@@ -128,7 +128,7 @@
                     class="flex w-full items-center justify-between gap-4 bg-white dark:bg-gray-800/60 px-6 py-4 text-left transition-colors hover:bg-amber-500/5 dark:hover:bg-amber-400/5 focus:outline-none"
                     :aria-expanded="open === '{{ $faq['id'] }}'">
                 <span class="font-medium text-gray-900 dark:text-white">{{ $faq['q'] }}</span>
-                <x-icon name="chevron-down" style="solid" class="w-4 h-4 text-amber-500 shrink-0 transition-transform duration-300" :class="{ 'rotate-180': open === '{{ $faq['id'] }}' }" />
+                <x-icon name="chevron-down" style="solid" class="w-4 h-4 text-amber-500 shrink-0 transition-transform duration-300" x-bind:class="{ 'rotate-180': open === '{{ $faq['id'] }}' }" />
             </button>
             <div x-show="open === '{{ $faq['id'] }}'"
                  x-cloak

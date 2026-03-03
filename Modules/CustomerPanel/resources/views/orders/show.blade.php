@@ -72,11 +72,37 @@
 
             {{-- Total --}}
             <div class="px-6 py-4 border-t border-border dark:border-border bg-gray-50 dark:bg-gray-800/50">
-                <div class="flex justify-end">
-                    <div class="text-right">
+                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+                    <div class="text-right sm:text-left">
                         <p class="text-2xl font-bold text-gray-900 dark:text-white">Total: {{ $order->total_formatted }}</p>
                         @if ($order->payment_method)
-                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">Pagamento: {{ ucfirst(str_replace('_', ' ', $order->payment_method)) }}</p>
+                            <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
+                                Pagamento: {{ ucfirst(str_replace('_', ' ', $order->payment_method)) }}
+                            </p>
+                        @endif
+                    </div>
+                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1 sm:text-right">
+                        @if ($order->payment_status)
+                            <p>
+                                Status do pagamento:
+                                <span class="font-medium text-gray-900 dark:text-white">
+                                    {{ ucfirst(str_replace('_', ' ', $order->payment_status)) }}
+                                </span>
+                            </p>
+                        @endif
+                        @if ($order->paymentGateway)
+                            <p>
+                                Gateway:
+                                <span class="font-medium text-gray-900 dark:text-white">
+                                    {{ $order->paymentGateway->provider_label }} ({{ $order->paymentGateway->environment_label }})
+                                </span>
+                            </p>
+                        @endif
+                        @if ($order->payment_status && $order->payment_status !== 'paid')
+                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400 max-w-md">
+                                Pagamentos com status <strong>pendente</strong> ou <strong>em processamento</strong> significam que estamos aguardando a confirmação do provedor (banco, cartão, PIX ou boleto).
+                                Assim que o pagamento for aprovado, o status será atualizado automaticamente aqui.
+                            </p>
                         @endif
                     </div>
                 </div>

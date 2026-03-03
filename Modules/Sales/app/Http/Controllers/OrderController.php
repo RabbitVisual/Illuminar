@@ -13,6 +13,7 @@ class OrderController extends Controller
     public function index(Request $request): View
     {
         $query = Order::with(['customer', 'user'])
+            ->withCount('items')
             ->orderByDesc('created_at');
 
         if ($request->filled('order_number')) {
@@ -38,7 +39,7 @@ class OrderController extends Controller
 
     public function show(Order $order): View
     {
-        $order->load(['items.product', 'customer', 'user']);
+        $order->load(['items.product', 'customer', 'user', 'payments', 'paymentGateway']);
 
         return view('sales::orders.show', compact('order'));
     }

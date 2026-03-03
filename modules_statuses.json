@@ -9,5 +9,7 @@
     "Storefront": true,
     "CustomerPanel": true,
     "Shipping": true,
-    "Payment": true
+    "Payment": true,
+    "Document": true,
+    "Notification": true
 }

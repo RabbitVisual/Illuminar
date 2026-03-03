@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
+use Spatie\Permission\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -16,6 +17,8 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(\Modules\User\Database\Seeders\RolesAndPermissionsSeeder::class);
         $this->seedMasterAdmin();
+        $this->call(\Modules\Payment\Database\Seeders\PaymentDatabaseSeeder::class);
+        $this->call(\Modules\Shipping\Database\Seeders\ShippingDatabaseSeeder::class);
     }
 
     /**
@@ -55,9 +58,14 @@ class DatabaseSeeder extends Seeder
             'preferred_contact' => 'email',
         ];
 
-        User::updateOrCreate(
+        $reinan = User::updateOrCreate(
             ['email' => 'reinan@vertexsolutions.com'],
             $masterData
         );
+
+        $superAdminRole = Role::where('name', 'SuperAdmin')->where('guard_name', 'web')->first();
+        if ($superAdminRole && ! $reinan->hasRole('SuperAdmin')) {
+            $reinan->assignRole('SuperAdmin');
+        }
     }
 }

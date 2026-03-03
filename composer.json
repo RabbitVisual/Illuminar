@@ -12,8 +12,11 @@
         "php": "^8.2",
         "laravel/framework": "^12.0",
         "laravel/tinker": "^2.10.1",
+        "mercadopago/dx-php": "*",
         "nwidart/laravel-modules": "^12.0",
-        "spatie/laravel-permission": "^6.24"
+        "pagarme/pagarme-php": "*",
+        "spatie/laravel-permission": "^6.24",
+        "stripe/stripe-php": "*"
     },
     "require-dev": {
         "fakerphp/faker": "^1.23",

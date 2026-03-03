@@ -150,6 +150,50 @@
                             </a>
                         </div>
                     @endif
+                    @if (Route::has('shipping.methods.index'))
+                        <div class="pt-2 mt-2 border-t border-border dark:border-border">
+                            <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                <x-icon name="truck-fast" style="duotone" class="w-4 h-4" />
+                                Entregas
+                            </p>
+                            <a href="{{ route('shipping.methods.index') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                <x-icon name="truck" style="duotone" />
+                                <span>Métodos de Entrega</span>
+                            </a>
+                            @if (Route::has('shipping.admin.shipments.index'))
+                                <a href="{{ route('shipping.admin.shipments.index') }}"
+                                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                    <x-icon name="box-open" style="duotone" />
+                                    <span>Entregas e Rastreio</span>
+                                </a>
+                            @endif
+                        </div>
+                    @endif
+                    @hasrole('SuperAdmin|Owner')
+                        @if (Route::has('payment.admin.gateways.index') || Route::has('shipping.methods.index'))
+                            <div class="pt-2 mt-2 border-t border-border dark:border-border">
+                                <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                    <x-icon name="gear" style="duotone" class="w-4 h-4" />
+                                    Configurações
+                                </p>
+                                @if (Route::has('shipping.methods.index'))
+                                    <a href="{{ route('shipping.methods.index') }}"
+                                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                        <x-icon name="truck" style="duotone" />
+                                        <span>Métodos de Entrega</span>
+                                    </a>
+                                @endif
+                                @if (Route::has('payment.admin.gateways.index'))
+                                    <a href="{{ route('payment.admin.gateways.index') }}"
+                                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                        <x-icon name="credit-card" style="duotone" />
+                                        <span>Gateways de Pagamento</span>
+                                    </a>
+                                @endif
+                            </div>
+                        @endif
+                    @endhasrole
                 @endhasanyrole
 
                 @role('Customer')

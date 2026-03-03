@@ -9,6 +9,10 @@ Route::middleware('web')->group(function () {
     Route::get('/catalogo', [StorefrontController::class, 'catalog'])->name('storefront.catalog');
     Route::get('/produto/{slug}', [StorefrontController::class, 'product'])->name('storefront.product');
     Route::get('/carrinho', [StorefrontController::class, 'cart'])->name('storefront.cart');
+    Route::post('/calcular-frete', [StorefrontController::class, 'calculateShipping'])->name('storefront.calculate-shipping');
+
+    Route::get('/checkout/sucesso', [StorefrontController::class, 'checkoutSuccess'])->name('storefront.checkout.success');
+    Route::get('/checkout/cancelado', [StorefrontController::class, 'checkoutCancel'])->name('storefront.checkout.cancel');
 
     Route::middleware('auth')->group(function () {
         Route::get('/checkout', [StorefrontController::class, 'checkout'])->name('storefront.checkout');
