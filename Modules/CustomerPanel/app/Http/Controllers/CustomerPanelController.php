@@ -1,62 +1,91 @@
 <?php
 
-/**
- * Autor: Reinan Rodrigues
- * Empresa: Vertex Solutions LTDA © 2026
- * Email: r.rodriguesjs@gmail.com
- */
-
 namespace Modules\CustomerPanel\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\View\View;
+use Modules\Core\Helpers\UtilsHelper;
+use Modules\Sales\Models\Order;
 
 class CustomerPanelController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function index(): View
     {
-        return view('customerpanel::index');
+        $customerId = Auth::id();
+        $orders = Order::where('customer_id', $customerId)
+            ->with(['items.product'])
+            ->orderByDesc('created_at')
+            ->limit(3)
+            ->get();
+
+        $totalSpent = Order::where('customer_id', $customerId)
+            ->whereIn('status', [Order::STATUS_PAID, Order::STATUS_SHIPPED])
+            ->sum('total_amount');
+
+        $ordersCount = Order::where('customer_id', $customerId)->count();
+
+        $totalSpentFormatted = UtilsHelper::formatMoneyToDisplay($totalSpent / 100);
+
+        return view('customerpanel::index', compact('orders', 'totalSpentFormatted', 'ordersCount'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
+    public function orders(): View
     {
-        return view('customerpanel::create');
+        $orders = Order::where('customer_id', Auth::id())
+            ->orderByDesc('created_at')
+            ->paginate(15);
+
+        return view('customerpanel::orders.index', compact('orders'));
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function showOrder(string $order_number): View|RedirectResponse
     {
-        return view('customerpanel::show');
+        $order = Order::where('customer_id', Auth::id())
+            ->where('order_number', $order_number)
+            ->with(['items.product'])
+            ->firstOrFail();
+
+        return view('customerpanel::orders.show', compact('order'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
+    public function profile(): View
     {
-        return view('customerpanel::edit');
+        $user = Auth::user();
+
+        return view('customerpanel::profile', compact('user'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
+    public function updateProfile(Request $request): RedirectResponse
+    {
+        $rules = [
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+        ];
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
+        $validated = $request->validate($rules);
+
+        $user = User::findOrFail(Auth::id());
+
+        $data = [
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'phone' => UtilsHelper::onlyDigits($validated['phone'] ?? '') ?: null,
+        ];
+
+        if (! empty($validated['password'])) {
+            $data['password'] = $validated['password'];
+        }
+
+        $user->update($data);
+
+        return redirect()
+            ->route('customer.profile')
+            ->with('success', 'Perfil atualizado com sucesso.');
+    }
 }

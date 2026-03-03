@@ -54,7 +54,7 @@
         <aside class="fixed inset-y-0 left-0 z-40 w-64 flex flex-col bg-white dark:bg-surface border-r border-border dark:border-border transform -translate-x-full lg:translate-x-0 lg:static transition-transform duration-200 ease-out"
                :class="{ 'translate-x-0': sidebarOpen }">
             <div class="flex h-16 items-center justify-between gap-2 border-b border-border dark:border-border px-4 lg:px-6">
-                <a href="{{ url('/core') }}" class="flex items-center gap-2 font-display font-bold text-lg text-primary dark:text-primary">
+                <a href="@role('Customer'){{ route('customer.index') }}@else{{ Route::has('admin.index') ? route('admin.index') : url('/core') }}@endrole" class="flex items-center gap-2 font-display font-bold text-lg text-primary dark:text-primary">
                     <x-icon name="lightbulb" style="duotone" class="text-2xl" />
                     <span>Illuminar</span>
                 </a>
@@ -65,91 +65,124 @@
                 </button>
             </div>
             <nav class="flex-1 overflow-y-auto p-4 space-y-1">
-                @if (Route::has('admin.index'))
-                    <a href="{{ route('admin.index') }}"
+                @hasanyrole('SuperAdmin|Owner|Manager|Cashier')
+                    @if (Route::has('admin.index'))
+                        <a href="{{ route('admin.index') }}"
+                           class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                            <x-icon name="chart-pie" style="duotone" />
+                            <span>Dashboard</span>
+                        </a>
+                    @endif
+                    <a href="{{ url('/core') }}"
                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                        <x-icon name="chart-pie" style="duotone" />
-                        <span>Dashboard</span>
+                        <x-icon name="house" style="duotone" />
+                        <span>Início</span>
                     </a>
-                @endif
-                <a href="{{ url('/core') }}"
-                   class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                    <x-icon name="house" style="duotone" />
-                    <span>Início</span>
-                </a>
-                @if (Route::has('user.index'))
-                    <a href="{{ route('user.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                        <x-icon name="users" style="duotone" />
-                        <span>Usuários</span>
-                    </a>
-                @endif
-                @if (Route::has('role.index'))
-                    <a href="{{ route('role.index') }}"
-                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                        <x-icon name="key" style="duotone" />
-                        <span>Papéis</span>
-                    </a>
-                @endif
-                @if (Route::has('catalog.products.index'))
-                    <div class="pt-2 mt-2 border-t border-border dark:border-border">
-                        <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                            <x-icon name="box-open" style="duotone" class="w-4 h-4" />
-                            Catálogo
-                        </p>
-                        <a href="{{ route('catalog.products.index') }}"
+                    @if (Route::has('user.index'))
+                        <a href="{{ route('user.index') }}"
                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                            <x-icon name="box-open" style="duotone" />
-                            <span>Produtos</span>
+                            <x-icon name="users" style="duotone" />
+                            <span>Usuários</span>
                         </a>
-                        <a href="{{ route('catalog.categories.index') }}"
+                    @endif
+                    @if (Route::has('role.index'))
+                        <a href="{{ route('role.index') }}"
                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                            <x-icon name="tags" style="duotone" />
-                            <span>Categorias</span>
+                            <x-icon name="key" style="duotone" />
+                            <span>Papéis</span>
                         </a>
-                        <a href="{{ route('catalog.brands.index') }}"
+                    @endif
+                    @if (Route::has('catalog.products.index'))
+                        <div class="pt-2 mt-2 border-t border-border dark:border-border">
+                            <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                <x-icon name="box-open" style="duotone" class="w-4 h-4" />
+                                Catálogo
+                            </p>
+                            <a href="{{ route('catalog.products.index') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                <x-icon name="box-open" style="duotone" />
+                                <span>Produtos</span>
+                            </a>
+                            <a href="{{ route('catalog.categories.index') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                <x-icon name="tags" style="duotone" />
+                                <span>Categorias</span>
+                            </a>
+                            <a href="{{ route('catalog.brands.index') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                <x-icon name="copyright" style="duotone" />
+                                <span>Marcas</span>
+                            </a>
+                        </div>
+                    @endif
+                    @if (Route::has('inventory.transactions.index'))
+                        <div class="pt-2 mt-2 border-t border-border dark:border-border">
+                            <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                <x-icon name="warehouse" style="duotone" class="w-4 h-4" />
+                                Estoque
+                            </p>
+                            <a href="{{ route('inventory.transactions.index') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                <x-icon name="clock-rotate-left" style="duotone" />
+                                <span>Kardex (Histórico)</span>
+                            </a>
+                            <a href="{{ route('inventory.transactions.create') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                <x-icon name="plus" style="duotone" />
+                                <span>Nova Movimentação</span>
+                            </a>
+                            <a href="{{ route('inventory.suppliers.index') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                <x-icon name="truck" style="duotone" />
+                                <span>Fornecedores</span>
+                            </a>
+                        </div>
+                    @endif
+                    @if (Route::has('sales.orders.index'))
+                        <div class="pt-2 mt-2 border-t border-border dark:border-border">
+                            <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                                <x-icon name="receipt" style="duotone" class="w-4 h-4" />
+                                Vendas
+                            </p>
+                            <a href="{{ route('sales.orders.index') }}"
+                               class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                <x-icon name="shopping-cart" style="duotone" />
+                                <span>Todos os Pedidos</span>
+                            </a>
+                        </div>
+                    @endif
+                @endhasanyrole
+
+                @role('Customer')
+                    @if (Route::has('customer.index'))
+                        <a href="{{ route('customer.index') }}"
                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                            <x-icon name="copyright" style="duotone" />
-                            <span>Marcas</span>
+                            <x-icon name="user" style="duotone" />
+                            <span>Meu Painel</span>
                         </a>
-                    </div>
-                @endif
-                @if (Route::has('inventory.transactions.index'))
-                    <div class="pt-2 mt-2 border-t border-border dark:border-border">
-                        <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                            <x-icon name="warehouse" style="duotone" class="w-4 h-4" />
-                            Estoque
-                        </p>
-                        <a href="{{ route('inventory.transactions.index') }}"
+                    @endif
+                    @if (Route::has('customer.orders.index'))
+                        <a href="{{ route('customer.orders.index') }}"
                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                            <x-icon name="clock-rotate-left" style="duotone" />
-                            <span>Kardex (Histórico)</span>
+                            <x-icon name="boxes-stacked" style="duotone" />
+                            <span>Meus Pedidos</span>
                         </a>
-                        <a href="{{ route('inventory.transactions.create') }}"
+                    @endif
+                    @if (Route::has('customer.profile'))
+                        <a href="{{ route('customer.profile') }}"
                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                            <x-icon name="plus" style="duotone" />
-                            <span>Nova Movimentação</span>
+                            <x-icon name="id-card" style="duotone" />
+                            <span>Meu Perfil</span>
                         </a>
-                        <a href="{{ route('inventory.suppliers.index') }}"
+                    @endif
+                    @if (Route::has('storefront.index'))
+                        <a href="{{ route('storefront.index') }}"
                            class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                            <x-icon name="truck" style="duotone" />
-                            <span>Fornecedores</span>
+                            <x-icon name="store" style="duotone" />
+                            <span>Ir para a Loja</span>
                         </a>
-                    </div>
-                @endif
-                @if (Route::has('sales.orders.index'))
-                    <div class="pt-2 mt-2 border-t border-border dark:border-border">
-                        <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
-                            <x-icon name="receipt" style="duotone" class="w-4 h-4" />
-                            Vendas
-                        </p>
-                        <a href="{{ route('sales.orders.index') }}"
-                           class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
-                            <x-icon name="shopping-cart" style="duotone" />
-                            <span>Todos os Pedidos</span>
-                        </a>
-                    </div>
-                @endif
+                    @endif
+                @endrole
             </nav>
             <div class="border-t border-border dark:border-border p-4 space-y-1">
                 <button type="button"
@@ -188,22 +221,24 @@
                         {{ $heading ?? 'Painel' }}
                     </h1>
                 </div>
-                @if (Route::has('storefront.index'))
-                    <a href="{{ route('storefront.index') }}"
-                       target="_blank"
-                       class="inline-flex items-center gap-2 rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors">
-                        <x-icon name="store" style="duotone" class="w-5 h-5" />
-                        <span class="hidden sm:inline">Ver Loja</span>
-                    </a>
-                @endif
-                @if (Route::has('pdv.index'))
-                    <a href="{{ route('pdv.index') }}"
-                       target="_blank"
-                       class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors">
-                        <x-icon name="cash-register" style="duotone" class="w-5 h-5" />
-                        <span class="hidden sm:inline">Abrir PDV</span>
-                    </a>
-                @endif
+                @hasanyrole('SuperAdmin|Owner|Manager|Cashier')
+                    @if (Route::has('storefront.index'))
+                        <a href="{{ route('storefront.index') }}"
+                           target="_blank"
+                           class="inline-flex items-center gap-2 rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors">
+                            <x-icon name="store" style="duotone" class="w-5 h-5" />
+                            <span class="hidden sm:inline">Ver Loja</span>
+                        </a>
+                    @endif
+                    @if (Route::has('pdv.index'))
+                        <a href="{{ route('pdv.index') }}"
+                           target="_blank"
+                           class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors">
+                            <x-icon name="cash-register" style="duotone" class="w-5 h-5" />
+                            <span class="hidden sm:inline">Abrir PDV</span>
+                        </a>
+                    @endif
+                @endhasanyrole
                 <button type="button"
                         @click="darkMode = !darkMode"
                         class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 lg:hidden"

@@ -1,52 +1,26 @@
-<x-core::layouts.master heading="Meu Painel">
-    <div class="space-y-8">
-        {{-- Cards de resumo --}}
-        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 lg:gap-6">
-            <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm flex items-start gap-4">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-green-100 dark:bg-green-900/30 text-green-600 dark:text-green-400">
-                    <x-icon name="coins" style="duotone" class="w-6 h-6" />
-                </div>
-                <div class="min-w-0 flex-1">
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Total Gasto</p>
-                    <p class="mt-1 font-display text-xl font-semibold text-gray-900 dark:text-white truncate">
-                        {{ $totalSpentFormatted }}
-                    </p>
-                </div>
-            </div>
-
-            <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm flex items-start gap-4">
-                <div class="flex h-12 w-12 shrink-0 items-center justify-center rounded-lg bg-blue-100 dark:bg-blue-900/30 text-blue-600 dark:text-blue-400">
-                    <x-icon name="boxes-stacked" style="duotone" class="w-6 h-6" />
-                </div>
-                <div class="min-w-0 flex-1">
-                    <p class="text-sm font-medium text-gray-500 dark:text-gray-400">Pedidos Realizados</p>
-                    <p class="mt-1 font-display text-xl font-semibold text-gray-900 dark:text-white">
-                        {{ $ordersCount }}
-                    </p>
-                </div>
-            </div>
+<x-core::layouts.master heading="Meus Pedidos">
+    <div class="space-y-6">
+        <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
+            <a href="{{ route('customer.index') }}" class="hover:text-primary transition-colors">Meu Painel</a>
+            <x-icon name="chevron-right" style="solid" class="w-4 h-4" />
+            <span class="text-gray-900 dark:text-white">Meus Pedidos</span>
         </div>
 
-        {{-- Últimos 3 pedidos --}}
-        <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface shadow-sm overflow-hidden">
-            <div class="flex items-center justify-between gap-4 border-b border-border dark:border-border px-4 py-3">
-                <h3 class="font-display text-lg font-semibold text-gray-900 dark:text-white">Últimos Pedidos</h3>
-                @if (Route::has('customer.orders.index'))
-                    <a href="{{ route('customer.orders.index') }}"
-                       class="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-primary hover:bg-primary/10 transition-colors">
-                        <x-icon name="arrow-right" style="solid" class="w-4 h-4" />
-                        Ver todos
-                    </a>
-                @endif
+        @if (session('success'))
+            <div class="rounded-lg border border-success/30 bg-success/10 px-4 py-3 text-sm text-success dark:bg-success/20">
+                {{ session('success') }}
             </div>
+        @endif
+
+        <div class="overflow-hidden rounded-xl border border-border dark:border-border bg-white dark:bg-surface shadow-sm">
             <div class="overflow-x-auto">
                 <table class="min-w-full divide-y divide-border dark:divide-border">
                     <thead class="bg-gray-50 dark:bg-gray-800/50">
                         <tr>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Número</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Data</th>
+                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Total</th>
                             <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Status</th>
-                            <th scope="col" class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Valor</th>
                             <th scope="col" class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Ações</th>
                         </tr>
                     </thead>
@@ -55,6 +29,7 @@
                             <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
                                 <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $order->order_number }}</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $order->created_at->format('d/m/Y H:i') }}</td>
+                                <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $order->total_formatted }}</td>
                                 <td class="px-4 py-3">
                                     @php
                                         $statusBadge = match($order->status) {
@@ -69,12 +44,11 @@
                                         {{ $order->status_label }}
                                     </span>
                                 </td>
-                                <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white text-right">{{ $order->total_formatted }}</td>
                                 <td class="px-4 py-3 text-right">
                                     <a href="{{ route('customer.orders.show', $order->order_number) }}"
                                        class="inline-flex items-center gap-2 rounded-lg px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors">
                                         <x-icon name="eye" style="solid" class="w-4 h-4" />
-                                        Ver
+                                        Ver Detalhes
                                     </a>
                                 </td>
                             </tr>
@@ -88,6 +62,11 @@
                     </tbody>
                 </table>
             </div>
+            @if ($orders->hasPages())
+                <div class="border-t border-border dark:border-border px-4 py-3">
+                    {{ $orders->links() }}
+                </div>
+            @endif
         </div>
     </div>
 </x-core::layouts.master>
