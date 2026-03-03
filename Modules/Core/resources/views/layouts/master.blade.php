@@ -181,6 +181,14 @@
                         {{ $heading ?? 'Painel' }}
                     </h1>
                 </div>
+                @if (Route::has('pdv.index'))
+                    <a href="{{ route('pdv.index') }}"
+                       target="_blank"
+                       class="inline-flex items-center gap-2 rounded-lg bg-green-600 px-4 py-2 text-sm font-medium text-white hover:bg-green-700 transition-colors">
+                        <x-icon name="cash-register" style="duotone" class="w-5 h-5" />
+                        <span class="hidden sm:inline">Abrir PDV</span>
+                    </a>
+                @endif
                 <button type="button"
                         @click="darkMode = !darkMode"
                         class="p-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-700 text-gray-600 dark:text-gray-400 lg:hidden"
