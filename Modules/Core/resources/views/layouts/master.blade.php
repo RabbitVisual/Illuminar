@@ -65,6 +65,13 @@
                 </button>
             </div>
             <nav class="flex-1 overflow-y-auto p-4 space-y-1">
+                @if (Route::has('admin.index'))
+                    <a href="{{ route('admin.index') }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                        <x-icon name="chart-pie" style="duotone" />
+                        <span>Dashboard</span>
+                    </a>
+                @endif
                 <a href="{{ url('/core') }}"
                    class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
                     <x-icon name="house" style="duotone" />

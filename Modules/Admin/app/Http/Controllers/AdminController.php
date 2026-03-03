@@ -9,54 +9,60 @@
 namespace Modules\Admin\Http\Controllers;
 
 use App\Http\Controllers\Controller;
-use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Modules\Catalog\Models\Product;
+use Modules\Core\Helpers\UtilsHelper;
+use Modules\Sales\Models\Order;
 
 class AdminController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Display the admin dashboard with metrics.
      */
-    public function index()
+    public function index(): View
     {
-        return view('admin::index');
+        $now = now();
+
+        $monthlySales = (int) Order::query()
+            ->whereMonth('created_at', $now->month)
+            ->whereYear('created_at', $now->year)
+            ->whereIn('status', [Order::STATUS_PAID, Order::STATUS_SHIPPED])
+            ->sum('total_amount');
+
+        $todaySales = (int) Order::query()
+            ->whereDate('created_at', $now->toDateString())
+            ->sum('total_amount');
+
+        $todayOrdersCount = Order::query()
+            ->whereDate('created_at', $now->toDateString())
+            ->count();
+
+        $pendingOrdersCount = Order::query()
+            ->where('status', Order::STATUS_PENDING)
+            ->count();
+
+        $lowStockProducts = Product::query()
+            ->where('stock', '<', 10)
+            ->orderBy('stock')
+            ->limit(5)
+            ->get();
+
+        $recentOrders = Order::query()
+            ->with(['customer', 'user'])
+            ->orderByDesc('created_at')
+            ->limit(5)
+            ->get();
+
+        $monthlySalesFormatted = UtilsHelper::formatMoneyToDisplay($monthlySales / 100);
+        $todaySalesFormatted = UtilsHelper::formatMoneyToDisplay($todaySales / 100);
+
+        return view('admin::index', compact(
+            'monthlySalesFormatted',
+            'todaySalesFormatted',
+            'todayOrdersCount',
+            'pendingOrdersCount',
+            'lowStockProducts',
+            'recentOrders'
+        ));
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('admin::create');
-    }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
-    {
-        return view('admin::show');
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit($id)
-    {
-        return view('admin::edit');
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, $id) {}
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy($id) {}
 }
