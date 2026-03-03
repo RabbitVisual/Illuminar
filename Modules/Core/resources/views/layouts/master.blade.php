@@ -70,8 +70,22 @@
                     <x-icon name="house" style="duotone" />
                     <span>Início</span>
                 </a>
+                @if (Route::has('user.index'))
+                    <a href="{{ route('user.index') }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                        <x-icon name="users" style="duotone" />
+                        <span>Usuários</span>
+                    </a>
+                @endif
+                @if (Route::has('role.index'))
+                    <a href="{{ route('role.index') }}"
+                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                        <x-icon name="key" style="duotone" />
+                        <span>Papéis</span>
+                    </a>
+                @endif
             </nav>
-            <div class="border-t border-border dark:border-border p-4">
+            <div class="border-t border-border dark:border-border p-4 space-y-1">
                 <button type="button"
                         @click="darkMode = !darkMode"
                         class="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
@@ -80,6 +94,16 @@
                     <x-icon name="moon" style="duotone" class="hidden dark:block w-5" />
                     <span x-text="darkMode ? 'Claro' : 'Escuro'">Tema</span>
                 </button>
+                @auth
+                    <form method="POST" action="{{ route('logout') }}" class="mt-2">
+                        @csrf
+                        <button type="submit"
+                                class="flex items-center gap-3 w-full px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-danger transition-colors">
+                            <x-icon name="right-from-bracket" style="solid" class="w-5" />
+                            <span>Sair</span>
+                        </button>
+                    </form>
+                @endauth
             </div>
         </aside>
 

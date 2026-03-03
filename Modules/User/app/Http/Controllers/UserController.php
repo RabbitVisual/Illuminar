@@ -1,62 +1,127 @@
 <?php
 
-/**
- * Autor: Reinan Rodrigues
- * Empresa: Vertex Solutions LTDA © 2026
- * Email: r.rodriguesjs@gmail.com
- */
-
 namespace Modules\User\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\User;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
+use Modules\Core\Helpers\UtilsHelper;
+use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
 {
     /**
-     * Display a listing of the resource.
+     * Lista todos os usuários.
      */
-    public function index()
+    public function index(): View
     {
-        return view('user::index');
+        $users = User::with('roles')->orderBy('first_name')->paginate(15);
+
+        return view('user::users.index', compact('users'));
     }
 
     /**
-     * Show the form for creating a new resource.
+     * Exibe o formulário de criação.
      */
-    public function create()
+    public function create(): View
     {
-        return view('user::create');
+        $roles = Role::where('guard_name', 'web')->orderBy('name')->get();
+
+        return view('user::users.create', compact('roles'));
     }
 
     /**
-     * Store a newly created resource in storage.
+     * Armazena um novo usuário.
      */
-    public function store(Request $request) {}
-
-    /**
-     * Show the specified resource.
-     */
-    public function show($id)
+    public function store(Request $request): RedirectResponse
     {
-        return view('user::show');
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'cpf' => ['nullable', 'string', 'max:14'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'role_id' => ['required', 'exists:roles,id'],
+        ]);
+
+        $user = User::create([
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'password' => $validated['password'],
+            'cpf' => UtilsHelper::onlyDigits($validated['cpf'] ?? '') ?: null,
+            'document' => UtilsHelper::onlyDigits($validated['cpf'] ?? '') ?: null,
+            'document_type' => 'cpf',
+            'phone' => UtilsHelper::onlyDigits($validated['phone'] ?? '') ?: null,
+            'status' => 'active',
+        ]);
+
+        $role = Role::findById($validated['role_id'], 'web');
+        $user->syncRoles([$role]);
+
+        return redirect()->route('user.index')->with('success', 'Usuário criado com sucesso.');
     }
 
     /**
-     * Show the form for editing the specified resource.
+     * Exibe o formulário de edição.
      */
-    public function edit($id)
+    public function edit(int $id): View
     {
-        return view('user::edit');
+        $user = User::findOrFail($id);
+        $roles = Role::where('guard_name', 'web')->orderBy('name')->get();
+
+        return view('user::users.edit', compact('user', 'roles'));
     }
 
     /**
-     * Update the specified resource in storage.
+     * Atualiza o usuário.
      */
-    public function update(Request $request, $id) {}
+    public function update(Request $request, int $id): RedirectResponse
+    {
+        $user = User::findOrFail($id);
+
+        $validated = $request->validate([
+            'first_name' => ['required', 'string', 'max:255'],
+            'last_name' => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'unique:users,email,' . $user->id],
+            'password' => ['nullable', 'string', 'min:8', 'confirmed'],
+            'cpf' => ['nullable', 'string', 'max:14'],
+            'phone' => ['nullable', 'string', 'max:20'],
+            'role_id' => ['required', 'exists:roles,id'],
+        ]);
+
+        $data = [
+            'first_name' => $validated['first_name'],
+            'last_name' => $validated['last_name'],
+            'email' => $validated['email'],
+            'cpf' => UtilsHelper::onlyDigits($validated['cpf'] ?? '') ?: null,
+            'document' => UtilsHelper::onlyDigits($validated['cpf'] ?? '') ?: null,
+            'phone' => UtilsHelper::onlyDigits($validated['phone'] ?? '') ?: null,
+        ];
+
+        if (! empty($validated['password'])) {
+            $data['password'] = $validated['password'];
+        }
+
+        $user->update($data);
+
+        $role = Role::findById($validated['role_id'], 'web');
+        $user->syncRoles([$role]);
+
+        return redirect()->route('user.index')->with('success', 'Usuário atualizado com sucesso.');
+    }
 
     /**
-     * Remove the specified resource from storage.
+     * Remove o usuário (soft delete).
      */
-    public function destroy($id) {}
+    public function destroy(int $id): RedirectResponse
+    {
+        $user = User::findOrFail($id);
+        $user->delete();
+
+        return redirect()->route('user.index')->with('success', 'Usuário excluído com sucesso.');
+    }
 }

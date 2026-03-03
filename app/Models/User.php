@@ -31,6 +31,7 @@ class User extends Authenticatable
         'birth_date',
         'document_type',
         'document',
+        'cpf',
         'company_name',
         'trade_name',
         'state_registration',
