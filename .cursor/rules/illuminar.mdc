@@ -1,0 +1,109 @@
+---
+description: Regras globais de arquitetura, UI/UX e definição de pronto (100%) para os módulos do sistema Illuminar.
+globs: *.php, *.blade.php, *.js, *.css
+alwaysApply: true
+---
+
+# Contexto Master: Sistema Illuminar
+Você é um Engenheiro de Software Sênior autônomo. Sua missão é desenvolver o **Illuminar**, um sistema corporativo modular de E-commerce e PDV para uma loja de iluminação.
+
+## ⚠️ REGRA ZERO: PROIBIÇÃO DE CÓDIGO ESQUELETO
+- É TERMINANTEMENTE PROIBIDO gerar código parcial, "esqueletos" ou usar comentários como `// adicione a lógica aqui` ou `// resto do código`.
+- Você DEVE gerar 100% do código funcional para o Frontend (Blade/Alpine/Tailwind) e Backend (Controllers, Models, Requests, Migrations, Services).
+- Se atingir o limite de tokens, finalize o bloco atual de forma íntegra e peça permissão para continuar.
+
+## Stack Tecnológica Estrita
+- **Backend:** Laravel 12, `nwidart/laravel-modules`, `spatie/laravel-permission`.
+- **Frontend:** Blade, Tailwind CSS v4.1, Alpine.js v3.15, Vanilla JS.
+- **Proibições:** NENHUM Livewire, NENHUM React ou Vue.js.
+
+## Diretrizes de UI/UX (GloablsSystem.md)
+1. **Loading Overlay:** SEMPRE use `<x-loading-overlay />` no layout base. Dispare via JS para ações > 3s (`window.dispatchEvent(new CustomEvent('start-loading'))`).
+2. **Ícones:** SEMPRE use o componente `<x-icon name="..." />` (Font Awesome Pro 7.1.0). Estilo padrão é `duotone`. NUNCA use `<i>` puro.
+3. **Tipografia:** `Inter` (font-sans padrão) para UI; `Poppins` (font-display) para títulos (h1-h6).
+4. **Dark Mode:** Use Tailwind v4 `dark:` variant. Gerenciado globalmente via Alpine (`x-data="{ darkMode: ... }"`).
+5. **Máscaras de Input (IMask):** Use a diretiva Alpine `x-mask` (ex: `'cpf'`, `'cnpj'`, `'phone'`, `'money'`). NO BACKEND: SEMPRE limpe a formatação antes de salvar usando `preg_replace('/\D/', '', $request->campo)`.
+
+---
+
+## Definição de Conclusão (100% Pronto) por Módulo
+
+Para considerar um módulo "100% concluído", ele deve possuir todas as funcionalidades descritas abaixo com código pronto para produção:
+
+### 1. Módulo Core (0 a 100%)
+- [ ] [cite_start]Implementação de layouts padronizados (master, auth, panel) com dark mode[cite: 2].
+- [ ] [cite_start]Criação e registro do componente `<x-loading-overlay>` via BladeServiceProvider[cite: 2].
+- [ ] [cite_start]Criação e registro do componente `<x-icon>`[cite: 2].
+- [ ] [cite_start]Configuração do Tailwind v4.1 (app.css) e Alpine.js + IMask (app.js) globais[cite: 2].
+- [ ] [cite_start]Estrutura de traits genéricos, helpers utilitários e middlewares base[cite: 2].
+
+### 2. Módulo User (0 a 100%)
+- [ ] [cite_start]Integração completa com `spatie/laravel-permission`[cite: 3].
+- [ ] [cite_start]Seeders com papéis fixos: Dono, Gerente, Caixa e Cliente[cite: 3].
+- [ ] [cite_start]Telas de CRUD completas (cadastro, edição, listagem e exclusão lógica) de usuários do sistema[cite: 3].
+- [ ] [cite_start]Interface visual para atribuição de permissões aos papéis[cite: 3].
+
+### 3. Módulo Catalog (0 a 100%)
+- [ ] [cite_start]Migrations e Models de Produtos com campos técnicos do segmento: voltagem, potência (watts), temperatura de cor (kelvin) e lúmens[cite: 5].
+- [ ] [cite_start]CRUD de Categorias e Marcas com upload de imagens[cite: 5].
+- [ ] [cite_start]CRUD de Produtos com precificação e relacionamento com marcas/categorias[cite: 5].
+- [ ] [cite_start]Telas de navegação, busca avançada e filtros técnicos no painel[cite: 6].
+
+### 4. Módulo Inventory (0 a 100%)
+- [ ] [cite_start]Separação total do módulo Catalog (estoque não é editado direto no produto)[cite: 7].
+- [ ] [cite_start]CRUD de Fornecedores[cite: 8].
+- [ ] [cite_start]Tela de registro de Entradas (compras/NF) e Saídas (avarias/perdas)[cite: 8].
+- [ ] [cite_start]Relatório Kardex (histórico de movimentação) que impede que pessoas não autorizadas alterem saldos[cite: 9].
+
+### 5. Módulo Sales (0 a 100%)
+- [ ] [cite_start]Motor central de pedidos unificando vendas físicas e online[cite: 10].
+- [ ] [cite_start]Tabelas e lógicas de processamento, status do pedido e rastreamento[cite: 10].
+- [ ] [cite_start]Módulo financeiro integrado: métodos de pagamento, recebimentos e faturamento[cite: 10].
+- [ ] [cite_start]Geração de recibos e exportação de dados para relatórios[cite: 10].
+
+### 6. Módulo StorePanel / PDV (0 a 100%)
+- [ ] [cite_start]Tela de Ponto de Venda ultra-rápida construída inteiramente reativa com Alpine.js[cite: 11].
+- [ ] [cite_start]Lógica de foco automático e contínuo para leitura de códigos de barras (bipou, entrou no carrinho)[cite: 12].
+- [ ] [cite_start]Implementação de atalhos de teclado (ex: F2 finalizar, F4 cancelar)[cite: 12].
+- [ ] [cite_start]Fechamento de venda via AJAX/Axios sem recarregar a página e comunicação com o módulo Sales[cite: 12].
+
+### 7. Módulo Admin (0 a 100%)
+- [ ] [cite_start]Dashboard mestre com gráficos de vendas dinâmicos[cite: 13].
+- [ ] [cite_start]Relatórios de análises de lucro e curva ABC (produtos mais vendidos)[cite: 13].
+- [ ] [cite_start]Telas de configuração de parâmetros globais da loja física e virtual[cite: 13].
+
+### 8. Módulo Storefront (0 a 100%)
+- [ ] [cite_start]Páginas públicas completas: Homepage, Listagem/Vitrine de Produtos[cite: 14].
+- [ ] [cite_start]Carrinho de compras reativo via Alpine.js/Session[cite: 14].
+- [ ] [cite_start]Processo de Checkout completo em etapas (Endereço, Pagamento, Revisão) integrado ao módulo Sales[cite: 14].
+- [ ] [cite_start]Área institucional para apresentação da marca[cite: 14].
+
+### 9. Módulo CustomerPanel (0 a 100%)
+- [ ] [cite_start]Painel restrito para o cliente final[cite: 15].
+- [ ] [cite_start]Telas de histórico de pedidos, detalhamento e rastreamento de entregas[cite: 15].
+- [ ] [cite_start]Função para download de faturas/notas fiscais[cite: 15].
+- [ ] [cite_start]Tela de edição de perfil e preferências[cite: 15].
+
+
+Descritivo completo dos módulos do sistema:
+
+1. **Core**: Módulo base da aplicação. Responsável por fornecer recursos essenciais e compartilhados, como layouts padronizados, o componente `<x-loading-overlay>`, integração com ícones (ex: Font Awesome), helpers utilitários e todas as configurações globais utilizadas pelos demais módulos.
+
+2. **User**: Gerenciamento de usuários e permissões de acesso. Integra o pacote Spatie Permission para definição e controle de papéis como Dono, Gerente, Caixa e Cliente, incluindo telas para cadastro, consulta e manutenção dos usuários.
+
+3. **Catalog**: Gestão central dos produtos da loja (foco em iluminação). Permite criar e editar produtos já com campos específicos do segmento: Voltagem, Potência (Watts), Temperatura de Cor (Kelvin), Lúmens, categorias e marcas. Inclui telas para navegação, busca, filtragem e manipulação do catálogo.
+
+4. **Inventory**: Controle de estoque rigoroso, separado do catálogo para maior segurança. Permite registrar entradas, saídas e transferências de produtos, além do cadastro e gestão de fornecedores, inventários e relatórios. Garante que apenas pessoas autorizadas possam movimentar o estoque, evitando erros no caixa.
+
+5. **Sales**: Processamento de vendas e gestão financeira. Unifica todos os pedidos gerados — tanto pelo caixa físico (leitor de códigos de barras no balcão) quanto pelo e-commerce — organizando pagamentos, status, rastreamento e histórico, facilitando relatórios financeiros, exportação e integração com métodos de pagamento.
+
+6. **StorePanel (PDV / Caixa)**: Ponto de Venda presencial, com interface rápida e responsiva desenvolvida em Alpine.js, focada em operação no balcão. Possui leitura automática de códigos de barras, atalhos de teclado, busca ágil de produtos e venda sem recarregar página, proporcionando fluxo otimizado aos operadores.
+
+7. **Admin**: Painel administrativo para donos e gestores. Oferece dashboards com gráficos dinâmicos de vendas, análises de lucro, relatórios detalhados, produtos mais vendidos (curva ABC), e funcionalidades para configurar parâmetros globais da loja.
+
+8. **Storefront**: Vitrine online (“loja virtual”) acessível pelo público. Disponibiliza catálogo de produtos para visualização e compra, carrinho de compras, processos de checkout, integração com pagamentos e área institucional para apresentação da marca na web.
+
+9. **CustomerPanel**: Área restrita para o cliente, onde pode acessar seu histórico de pedidos, detalhar cada compra, acompanhar o rastreamento de entregas e realizar o download de suas notas fiscais, além de editar seu perfil e preferências.
+
+Esses módulos, juntos, compõem toda a estrutura funcional da aplicação, garantindo flexibilidade, segurança e praticidade tanto para a equipe interna quanto para os clientes finais.
+

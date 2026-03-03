@@ -1,0 +1,11 @@
+{
+    "Core": true,
+    "User": true,
+    "Catalog": true,
+    "Inventory": true,
+    "Sales": true,
+    "StorePanel": true,
+    "Admin": true,
+    "Storefront": true,
+    "CustomerPanel": true
+}

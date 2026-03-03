@@ -1,0 +1,33 @@
+{
+    "name": "vertex/sales",
+    "version": "1.0.0",
+    "description": "Module sales - © Vertex Solutions LTDA - 2026 - VS.1.0",
+    "authors": [
+        {
+            "name": "Reinan Rodrigues",
+            "email": "r.rodriguesjs@gmail.com",
+            "homepage": "https://vertexsolutions.com.br",
+            "role": "Developer"
+        }
+    ],
+    "extra": {
+        "laravel": {
+            "providers": [],
+            "aliases": {
+
+            }
+        }
+    },
+    "autoload": {
+        "psr-4": {
+            "Modules\\Sales\\": "app/",
+            "Modules\\Sales\\Database\\Factories\\": "database/factories/",
+            "Modules\\Sales\\Database\\Seeders\\": "database/seeders/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Modules\\Sales\\Tests\\": "tests/"
+        }
+    }
+}
