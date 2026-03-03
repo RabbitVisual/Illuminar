@@ -171,7 +171,7 @@
                         </div>
                     @endif
                     @hasrole('SuperAdmin|Owner')
-                        @if (Route::has('payment.admin.gateways.index') || Route::has('shipping.methods.index') || Route::has('admin.security-requests.index') || Route::has('admin.settings.security'))
+                        @if (Route::has('payment.admin.gateways.index') || Route::has('shipping.methods.index') || Route::has('admin.security-requests.index') || Route::has('admin.settings.security') || Route::has('admin.notification.templates.index'))
                             <div class="pt-2 mt-2 border-t border-border dark:border-border">
                                 <p class="px-3 mb-2 text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 flex items-center gap-2">
                                     <x-icon name="gear" style="duotone" class="w-4 h-4" />
@@ -203,6 +203,13 @@
                                        class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
                                         <x-icon name="shield-halved" style="duotone" />
                                         <span>Segurança</span>
+                                    </a>
+                                @endif
+                                @if (Route::has('admin.notification.templates.index'))
+                                    <a href="{{ route('admin.notification.templates.index') }}"
+                                       class="flex items-center gap-3 px-3 py-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-gray-100 dark:hover:bg-gray-700 hover:text-primary dark:hover:text-primary transition-colors">
+                                        <x-icon name="envelope" style="duotone" />
+                                        <span>E-mails Automáticos</span>
                                     </a>
                                 @endif
                             </div>

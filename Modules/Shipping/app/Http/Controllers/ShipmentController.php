@@ -47,6 +47,14 @@ class ShipmentController extends Controller
             'shipped_at' => $validated['status'] === 'dispatched' && ! $shipment->shipped_at ? now() : $shipment->shipped_at,
         ]);
 
+        if ($validated['status'] === 'dispatched') {
+            $shipment->refresh();
+            $shipment->load(['order.customer', 'shippingMethod']);
+            if ($shipment->order) {
+                \Modules\Notification\Services\NotificationService::sendOrderShipped($shipment->order, $shipment);
+            }
+        }
+
         return redirect()
             ->route('shipping.admin.shipments.index')
             ->with('success', 'Código de rastreamento atualizado.');

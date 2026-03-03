@@ -14,21 +14,31 @@ class OrderStatusMail extends Mailable
     use Queueable, SerializesModels;
 
     /**
+     * Optional custom subject (when sending from template). If null, uses default.
+     */
+    public ?string $customSubject = null;
+
+    /**
      * Create a new message instance.
      */
     public function __construct(
         public Order $order,
         public string $title,
-        public string $messageBody
-    ) {}
+        public string $messageBody,
+        ?string $subject = null
+    ) {
+        $this->customSubject = $subject;
+    }
 
     /**
      * Get the message envelope.
      */
     public function envelope(): Envelope
     {
+        $subject = $this->customSubject ?? ('Illuminar - Seu pedido #' . $this->order->order_number);
+
         return new Envelope(
-            subject: 'Illuminar - Seu pedido #' . $this->order->order_number,
+            subject: $subject,
         );
     }
 

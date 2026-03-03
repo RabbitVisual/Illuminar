@@ -79,6 +79,8 @@ class StripeWebhookController extends Controller
             $order->status = Order::STATUS_PAID;
             $order->payment_status = Payment::STATUS_PAID;
             $order->save();
+
+            \Modules\Notification\Services\NotificationService::sendPaymentApproved($order);
         }
     }
 }

@@ -1,50 +1,55 @@
-<x-core::layouts.master heading="Módulo Core">
-    <div class="space-y-8">
+<x-core::layouts.master heading="Início">
+    <div class="max-w-3xl space-y-8">
         <div>
-            <h2 class="font-display text-2xl font-bold text-gray-900 dark:text-white">Illuminar</h2>
-            <p class="mt-1 text-gray-600 dark:text-gray-400">Sistema corporativo modular — E-commerce e PDV. Esta é a página de validação do Módulo Core.</p>
+            <h2 class="font-display text-2xl font-bold text-gray-900 dark:text-white">Bem-vindo ao Illuminar</h2>
+            <p class="mt-1 text-gray-600 dark:text-gray-400">Sistema corporativo de E-commerce e PDV. Use os atalhos abaixo para acessar as áreas do sistema.</p>
         </div>
 
-        <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm max-w-2xl">
-            <h3 class="font-display text-lg font-semibold text-gray-900 dark:text-white mb-4">Validação de componentes</h3>
-            <ul class="space-y-3 text-gray-700 dark:text-gray-300">
-                <li class="flex items-center gap-3">
-                    <x-icon name="check" style="solid" class="text-success shrink-0" />
-                    <span>Layout mestre com sidebar e topbar</span>
-                </li>
-                <li class="flex items-center gap-3">
-                    <x-icon name="check" style="solid" class="text-success shrink-0" />
-                    <span>Dark mode (toggle na sidebar ou topbar)</span>
-                </li>
-                <li class="flex items-center gap-3">
-                    <x-icon name="check" style="solid" class="text-success shrink-0" />
-                    <span>Componente <code class="px-1.5 py-0.5 rounded bg-gray-100 dark:bg-gray-700 text-sm">&lt;x-icon&gt;</code> (Font Awesome Pro)</span>
-                </li>
-                <li class="flex items-center gap-3">
-                    <x-icon name="check" style="solid" class="text-success shrink-0" />
-                    <span>Tipografia Inter (UI) e Poppins (títulos)</span>
-                </li>
-            </ul>
+        <div class="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            @hasanyrole('SuperAdmin|Owner|Manager|Cashier')
+                @if (Route::has('admin.index'))
+                    <a href="{{ route('admin.index') }}"
+                       class="flex flex-col gap-3 rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-md transition-all">
+                        <span class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 text-primary">
+                            <x-icon name="chart-pie" style="duotone" class="w-6 h-6" />
+                        </span>
+                        <div>
+                            <h3 class="font-display font-semibold text-gray-900 dark:text-white">Dashboard</h3>
+                            <p class="mt-0.5 text-sm text-gray-600 dark:text-gray-400">Gráficos, pedidos e relatórios</p>
+                        </div>
+                    </a>
+                @endif
+            @endhasanyrole
 
-            <div class="mt-6 pt-6 border-t border-border dark:border-border space-y-4">
-                <p class="text-sm text-gray-600 dark:text-gray-400">Testar loading overlay (ação &gt; 3s):</p>
-                <button type="button"
-                        @click="window.dispatchEvent(new CustomEvent('start-loading', { detail: { message: 'Processando...', icon: 'lightbulb' } })); setTimeout(() => window.dispatchEvent(new CustomEvent('stop-loading')), 3500)"
-                        class="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary dark:bg-primary text-white font-medium hover:opacity-90 transition-opacity">
-                    <x-icon name="spinner" style="solid" class="fa-spin" />
-                    Disparar loading (3,5s)
-                </button>
-            </div>
+            @hasanyrole('SuperAdmin|Owner|Manager|Cashier')
+                @if (Route::has('pdv.index'))
+                    <a href="{{ route('pdv.index') }}"
+                       class="flex flex-col gap-3 rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-md transition-all">
+                        <span class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 text-primary">
+                            <x-icon name="cash-register" style="duotone" class="w-6 h-6" />
+                        </span>
+                        <div>
+                            <h3 class="font-display font-semibold text-gray-900 dark:text-white">Abrir PDV</h3>
+                            <p class="mt-0.5 text-sm text-gray-600 dark:text-gray-400">Ponto de venda presencial</p>
+                        </div>
+                    </a>
+                @endif
+            @endhasanyrole
 
-            <div class="mt-6 pt-6 border-t border-border dark:border-border space-y-2" x-data="{ cpf: '' }">
-                <label for="test-cpf" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Máscara CPF (x-mask):</label>
-                <input type="text"
-                       id="test-cpf"
-                       x-mask="'cpf'"
-                       x-model="cpf"
-                       placeholder="000.000.000-00"
-                       class="w-full max-w-xs rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 placeholder-gray-500 focus:ring-2 focus:ring-primary focus:border-transparent">
-            </div>
+            @if (Route::has('storefront.index'))
+                <a href="{{ route('storefront.index') }}"
+                   target="_blank"
+                   rel="noopener"
+                   class="flex flex-col gap-3 rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm hover:border-primary/50 dark:hover:border-primary/50 hover:shadow-md transition-all">
+                    <span class="flex h-12 w-12 items-center justify-center rounded-lg bg-primary/10 dark:bg-primary/20 text-primary">
+                        <x-icon name="store" style="duotone" class="w-6 h-6" />
+                    </span>
+                    <div>
+                        <h3 class="font-display font-semibold text-gray-900 dark:text-white">Ver Loja</h3>
+                        <p class="mt-0.5 text-sm text-gray-600 dark:text-gray-400">Abrir vitrine em nova aba</p>
+                    </div>
+                </a>
+            @endif
         </div>
     </div>
 </x-core::layouts.master>
