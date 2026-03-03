@@ -5,7 +5,6 @@ namespace Modules\Catalog\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
-use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Modules\Catalog\Models\Category;
 use Illuminate\Support\Str;

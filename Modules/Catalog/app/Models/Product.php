@@ -4,6 +4,7 @@ namespace Modules\Catalog\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Modules\Core\Helpers\UtilsHelper;
 
 class Product extends Model
@@ -16,6 +17,7 @@ class Product extends Model
         'description',
         'price',
         'cost_price',
+        'stock',
         'brand_id',
         'category_id',
         'is_active',
@@ -38,6 +40,11 @@ class Product extends Model
     public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
+    }
+
+    public function inventoryTransactions(): HasMany
+    {
+        return $this->hasMany(\Modules\Inventory\Models\InventoryTransaction::class);
     }
 
     public function getPriceFormattedAttribute(): string
