@@ -34,6 +34,7 @@ class DocumentServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
+        $this->app->singleton(\Modules\Document\Services\PdfService::class, \Modules\Document\Services\PdfService::class);
         $this->app->register(EventServiceProvider::class);
         $this->app->register(RouteServiceProvider::class);
     }

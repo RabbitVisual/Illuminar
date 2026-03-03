@@ -32,12 +32,12 @@
                         <span class="inline-flex rounded-full px-3 py-1 text-sm font-medium bg-gray-100 text-gray-700 dark:bg-gray-700 dark:text-gray-300">
                             {{ $order->origin_label }}
                         </span>
-                        <button type="button"
-                                onclick="window.print()"
-                                class="inline-flex items-center gap-2 rounded-lg border border-border dark:border-border px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors print:hidden">
+                        <a href="{{ route('document.order.receipt', $order->order_number) }}"
+                           target="_blank"
+                           class="inline-flex items-center gap-2 rounded-lg border border-border dark:border-border px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors print:hidden">
                             <x-icon name="print" style="solid" class="w-4 h-4" />
-                            Imprimir
-                        </button>
+                            Imprimir Recibo
+                        </a>
                     </div>
                 </div>
             </div>

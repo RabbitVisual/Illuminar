@@ -37,13 +37,13 @@
 <body class="font-sans antialiased min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
     <x-loading-overlay />
 
-    {{-- Theme toggle (top-right corner) --}}
+    {{-- Theme toggle: apenas um ícone por vez (x-show evita sol e lua simultâneos) --}}
     <button type="button"
             @click="darkMode = !darkMode"
             class="fixed top-4 right-4 z-20 p-2 rounded-lg bg-white/80 dark:bg-gray-800/80 backdrop-blur-sm border border-gray-200 dark:border-gray-700 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors shadow-sm"
             aria-label="Alternar tema">
-        <x-icon name="sun-bright" style="duotone" class="block dark:hidden w-5 h-5" />
-        <x-icon name="moon" style="duotone" class="hidden dark:block w-5 h-5" />
+        <span x-show="!darkMode" x-cloak><x-icon name="sun-bright" style="duotone" class="w-5 h-5" /></span>
+        <span x-show="darkMode" x-cloak><x-icon name="moon" style="duotone" class="w-5 h-5" /></span>
     </button>
 
     {{-- Centered content slot --}}

@@ -40,6 +40,7 @@ class CoreServiceProvider extends ServiceProvider
         Blade::component('core::components.logo', 'core::logo');
         Blade::component('core::layouts.master', 'core::layouts.master');
         Blade::component('core::layouts.auth', 'core::layouts.auth');
+        Blade::component('core::layouts.auth-split', 'core::layouts.auth-split');
     }
 
     /**

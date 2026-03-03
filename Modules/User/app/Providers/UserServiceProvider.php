@@ -3,7 +3,9 @@
 namespace Modules\User\Providers;
 
 use Illuminate\Support\Facades\Blade;
+use Illuminate\Support\Facades\View;
 use Illuminate\Support\ServiceProvider;
+use Modules\Core\Models\Setting;
 use Nwidart\Modules\Traits\PathNamespace;
 use RecursiveDirectoryIterator;
 use RecursiveIteratorIterator;
@@ -27,6 +29,15 @@ class UserServiceProvider extends ServiceProvider
         $this->registerConfig();
         $this->registerViews();
         $this->loadMigrationsFrom(module_path($this->name, 'database/migrations'));
+        $this->registerAuthViewComposers();
+    }
+
+    protected function registerAuthViewComposers(): void
+    {
+        View::composer('user::auth.*', function ($view) {
+            $view->with('recaptchaEnabled', Setting::get('security.recaptcha_enabled', false));
+            $view->with('recaptchaSiteKey', Setting::get('security.recaptcha_v3_site_key', ''));
+        });
     }
 
     /**
