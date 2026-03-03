@@ -110,7 +110,7 @@ O **Illuminar** é uma plataforma completa de E-commerce e Ponto de Venda (PDV) 
 
 ```bash
 # Clone o repositório
-git clone <url-do-repositorio> illuminar
+git clone https://github.com/RabbitVisual/Illuminar.git illuminar
 cd illuminar
 
 # Instale as dependências PHP
