@@ -34,7 +34,7 @@
                   x-transition:leave-end="opacity-0 -translate-y-2"
                   action="{{ route('sales.orders.index') }}"
                   method="GET"
-                  class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-4 shadow-sm">
+                  class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                         <label for="order_number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número do pedido</label>
@@ -43,13 +43,13 @@
                                name="order_number"
                                value="{{ request('order_number') }}"
                                placeholder="PED-202603-0001"
-                               class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     </div>
                     <div>
                         <label for="status" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Status</label>
                         <select id="status"
                                 name="status"
-                                class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="">Todos</option>
                             <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pendente</option>
                             <option value="paid" {{ request('status') == 'paid' ? 'selected' : '' }}>Pago</option>
@@ -63,7 +63,7 @@
                                id="date_from"
                                name="date_from"
                                value="{{ request('date_from') }}"
-                               class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     </div>
                     <div>
                         <label for="date_to" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data final</label>
@@ -71,12 +71,12 @@
                                id="date_to"
                                name="date_to"
                                value="{{ request('date_to') }}"
-                               class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     </div>
                 </div>
-                <div class="mt-4 flex gap-2">
+                <div class="mt-4 flex flex-wrap gap-2">
                     <button type="submit"
-                            class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+                            class="inline-flex items-center gap-2 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                         <x-icon name="magnifying-glass" style="solid" class="w-4 h-4" />
                         Filtrar
                     </button>
@@ -84,29 +84,52 @@
                        class="inline-flex items-center gap-2 rounded-lg border border-border dark:border-border px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                         Limpar
                     </a>
+                    <button type="submit"
+                            name="export"
+                            value="csv"
+                            class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:border-gray-600">
+                        <x-icon name="file-export" style="duotone" class="w-4 h-4" />
+                        Exportar CSV
+                    </button>
                 </div>
             </form>
         </div>
 
-        <div class="overflow-hidden rounded-xl border border-border dark:border-border bg-white dark:bg-surface shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-border dark:divide-border">
-                    <thead class="bg-gray-50 dark:bg-gray-800/50">
-                        <tr>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Número</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Data</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Cliente</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Itens</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Total</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Status</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Pagamento</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Origem</th>
-                            <th scope="col" class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border dark:divide-border bg-white dark:bg-surface">
-                        @forelse ($orders as $order)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+        @isset($stats)
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Pedidos no período</p>
+                    <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $stats['total_count'] }}</p>
+                </div>
+                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Valor total</p>
+                    <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $stats['total_amount_formatted'] }}</p>
+                </div>
+                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Ticket médio</p>
+                    <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $stats['avg_ticket_formatted'] }}</p>
+                </div>
+            </div>
+        @endisset
+
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">Número</th>
+                        <th scope="col" class="px-4 py-3">Data</th>
+                        <th scope="col" class="px-4 py-3">Cliente</th>
+                        <th scope="col" class="px-4 py-3">Itens</th>
+                        <th scope="col" class="px-4 py-3">Total</th>
+                        <th scope="col" class="px-4 py-3">Status</th>
+                        <th scope="col" class="px-4 py-3">Pagamento</th>
+                        <th scope="col" class="px-4 py-3">Origem</th>
+                        <th scope="col" class="px-4 py-3 text-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($orders as $order)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $order->order_number }}</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $order->created_at->format('d/m/Y H:i') }}</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $order->customer?->full_name ?? 'Consumidor Final' }}</td>
@@ -149,11 +172,10 @@
                                 </td>
                             </tr>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
             @if ($orders->hasPages())
-                <div class="border-t border-border dark:border-border px-4 py-3">
+                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
                     {{ $orders->links() }}
                 </div>
             @endif

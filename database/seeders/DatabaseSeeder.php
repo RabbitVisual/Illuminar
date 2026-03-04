@@ -19,6 +19,18 @@ class DatabaseSeeder extends Seeder
         $this->seedMasterAdmin();
         $this->call(\Modules\Payment\Database\Seeders\PaymentDatabaseSeeder::class);
         $this->call(\Modules\Shipping\Database\Seeders\ShippingDatabaseSeeder::class);
+        $this->call(\Modules\Core\Database\Seeders\CoreDatabaseSeeder::class);
+        $this->call(\Modules\Catalog\Database\Seeders\CatalogDatabaseSeeder::class);
+        $this->call(\Modules\Inventory\Database\Seeders\InventoryDatabaseSeeder::class);
+        $this->call(\Modules\Sales\Database\Seeders\SalesDatabaseSeeder::class);
+        $this->call(\Modules\Storefront\Database\Seeders\StorefrontDatabaseSeeder::class);
+        $this->call(\Modules\Admin\Database\Seeders\AdminDatabaseSeeder::class);
+        $this->call(\Modules\CustomerPanel\Database\Seeders\CustomerPanelDatabaseSeeder::class);
+        $this->call(\Modules\StorePanel\Database\Seeders\StorePanelDatabaseSeeder::class);
+        $this->call(\Modules\Notification\Database\Seeders\NotificationDatabaseSeeder::class);
+        $this->call(\Modules\Notification\Database\Seeders\NotificationTemplateSeeder::class);
+        $this->call(\Modules\Document\Database\Seeders\DocumentDatabaseSeeder::class);
+        $this->seedDemoCustomer();
     }
 
     /**
@@ -66,6 +78,31 @@ class DatabaseSeeder extends Seeder
         $superAdminRole = Role::where('name', 'SuperAdmin')->where('guard_name', 'web')->first();
         if ($superAdminRole && ! $reinan->hasRole('SuperAdmin')) {
             $reinan->assignRole('SuperAdmin');
+        }
+    }
+
+    /**
+     * Usuário cliente demo para testes de compra no storefront.
+     */
+    private function seedDemoCustomer(): void
+    {
+        $customerData = [
+            'first_name' => 'Cliente',
+            'last_name' => 'Demo',
+            'email' => 'cliente@demo.com',
+            'password' => Hash::make('password'),
+            'status' => 'active',
+            'email_verified_at' => now(),
+        ];
+
+        $customer = User::updateOrCreate(
+            ['email' => 'cliente@demo.com'],
+            $customerData
+        );
+
+        $customerRole = Role::where('name', 'Customer')->where('guard_name', 'web')->first();
+        if ($customerRole && ! $customer->hasRole('Customer')) {
+            $customer->assignRole('Customer');
         }
     }
 }

@@ -34,10 +34,61 @@ class InventoryTransactionController extends Controller
             $query->whereDate('created_at', '<=', $request->date_to);
         }
 
+        // Export CSV (limitado para evitar respostas muito grandes)
+        if ($request->get('export') === 'csv') {
+            $exportQuery = clone $query;
+            $transactions = $exportQuery->limit(5000)->get();
+
+            $fileName = 'kardex-' . now()->format('Ymd-His') . '.csv';
+
+            return response()->streamDownload(function () use ($transactions) {
+                $handle = fopen('php://output', 'w');
+                fputcsv($handle, [
+                    'Data/Hora',
+                    'Produto',
+                    'SKU',
+                    'Tipo',
+                    'Quantidade',
+                    'Responsável',
+                    'Fornecedor',
+                    'Descrição',
+                ]);
+
+                foreach ($transactions as $transaction) {
+                    fputcsv($handle, [
+                        optional($transaction->created_at)->format('d/m/Y H:i'),
+                        optional($transaction->product)->name,
+                        optional($transaction->product)->sku,
+                        $transaction->isIn() ? 'Entrada' : 'Saída',
+                        $transaction->quantity,
+                        optional($transaction->user)->full_name,
+                        optional($transaction->supplier)->name,
+                        $transaction->description,
+                    ]);
+                }
+
+                fclose($handle);
+            }, $fileName, [
+                'Content-Type' => 'text/csv; charset=UTF-8',
+            ]);
+        }
+
+        // Estatísticas rápidas
+        $statsQuery = clone $query;
+        $totalIn = (clone $statsQuery)->where('type', 'in')->sum('quantity');
+        $totalOut = (clone $statsQuery)->where('type', 'out')->sum('quantity');
+        $totalMovements = (clone $statsQuery)->count();
+
         $transactions = $query->paginate(20)->withQueryString();
         $products = Product::orderBy('name')->get();
 
-        return view('inventory::transactions.index', compact('transactions', 'products'));
+        $stats = [
+            'total_in' => (int) $totalIn,
+            'total_out' => (int) $totalOut,
+            'total_movements' => (int) $totalMovements,
+        ];
+
+        return view('inventory::transactions.index', compact('transactions', 'products', 'stats'));
     }
 
     public function create(): View

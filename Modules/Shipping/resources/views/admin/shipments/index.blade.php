@@ -17,33 +17,32 @@
 
         <form method="GET" action="{{ route('shipping.admin.shipments.index') }}" class="flex flex-wrap gap-4">
             <input type="text" name="tracking" value="{{ request('tracking') }}" placeholder="Código de rastreio"
-                   class="rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-sm text-gray-900 dark:text-gray-100 w-48">
-            <select name="status" class="rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-sm text-gray-900 dark:text-gray-100">
+                   class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-48 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+            <select name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-48 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                 <option value="">Todos os status</option>
                 <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pendente</option>
                 <option value="dispatched" {{ request('status') === 'dispatched' ? 'selected' : '' }}>Enviado</option>
                 <option value="delivered" {{ request('status') === 'delivered' ? 'selected' : '' }}>Entregue</option>
             </select>
-            <button type="submit" class="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90">Filtrar</button>
+            <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">Filtrar</button>
         </form>
 
-        <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface overflow-hidden shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-800">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Pedido</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Cliente</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Método</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Valor Frete</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Rastreio</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Status</th>
-                            <th class="px-4 py-3 text-right text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @forelse ($shipments as $shipment)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">Pedido</th>
+                        <th scope="col" class="px-4 py-3">Cliente</th>
+                        <th scope="col" class="px-4 py-3">Método</th>
+                        <th scope="col" class="px-4 py-3">Valor Frete</th>
+                        <th scope="col" class="px-4 py-3">Rastreio</th>
+                        <th scope="col" class="px-4 py-3">Status</th>
+                        <th scope="col" class="px-4 py-3 text-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($shipments as $shipment)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-4 py-3">
                                     <a href="{{ route('sales.orders.show', $shipment->order) }}" class="font-medium text-primary hover:underline">
                                         {{ $shipment->order->order_number ?? '#' . $shipment->order_id }}
@@ -72,7 +71,7 @@
                                 </td>
                                 <td class="px-4 py-3 text-right">
                                     <a href="{{ route('shipping.admin.shipments.edit', $shipment) }}"
-                                       class="text-primary hover:underline text-sm">
+                                       class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 dark:border-gray-600">
                                         Informar Rastreio
                                     </a>
                                 </td>
@@ -84,11 +83,10 @@
                                 </td>
                             </tr>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
             @if ($shipments->hasPages())
-                <div class="px-4 py-3 border-t border-border dark:border-border">
+                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
                     {{ $shipments->links() }}
                 </div>
             @endif

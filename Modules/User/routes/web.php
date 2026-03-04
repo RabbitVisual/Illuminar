@@ -6,6 +6,7 @@ use Modules\User\Http\Controllers\ForgotPasswordController;
 use Modules\User\Http\Controllers\RegisterController;
 use Modules\User\Http\Controllers\RoleController;
 use Modules\User\Http\Controllers\UserController;
+use Modules\User\Http\Controllers\DevLoginController;
 
 Route::get('login', [AuthController::class, 'showLoginForm'])->name('login');
 Route::post('login', [AuthController::class, 'login']);
@@ -20,6 +21,13 @@ Route::get('esqueci-senha/cpf', [ForgotPasswordController::class, 'showRequestFo
 Route::post('esqueci-senha/cpf', [ForgotPasswordController::class, 'sendResetLinkCpf'])->name('password.email.cpf');
 Route::get('redefinir-senha/{token}', [ForgotPasswordController::class, 'showResetForm'])->name('password.reset');
 Route::post('redefinir-senha', [ForgotPasswordController::class, 'reset'])->name('password.update');
+
+// Auto login para ambiente de desenvolvimento
+if (app()->environment('local')) {
+    Route::get('dev-login/{type}', [DevLoginController::class, 'loginAs'])
+        ->whereIn('type', ['admin', 'pdv', 'customer'])
+        ->name('dev-login');
+}
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::resource('users', UserController::class)->names('user');

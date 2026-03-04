@@ -7,6 +7,7 @@ use Modules\Catalog\Models\Product;
 use Modules\Inventory\Models\InventoryTransaction;
 use Modules\Sales\Models\Order;
 use Modules\Sales\Models\OrderItem;
+use Modules\Sales\Services\CouponService;
 use Modules\Shipping\Models\Shipment;
 use Modules\Shipping\Models\ShippingMethod;
 
@@ -18,6 +19,8 @@ class OrderService
             $orderNumber = $this->generateOrderNumber();
             $subtotalAmount = 0;
             $orderItems = [];
+            $discountAmount = 0;
+            $appliedCoupon = null;
 
             foreach ($items as $item) {
                 $product = Product::findOrFail($item['product_id']);
@@ -39,9 +42,19 @@ class OrderService
                 ];
             }
 
+            if (! empty($data['coupon_code'])) {
+                /** @var CouponService $couponService */
+                $couponService = app(CouponService::class);
+
+                $result = $couponService->apply($data['coupon_code'], $subtotalAmount);
+
+                $appliedCoupon = $result['coupon'];
+                $discountAmount = $result['discount'];
+            }
+
             $shippingAmount = (int) ($data['shipping_amount'] ?? 0);
             $shippingMethodId = $data['shipping_method_id'] ?? null;
-            $totalAmount = $subtotalAmount + $shippingAmount;
+            $totalAmount = max(0, $subtotalAmount - $discountAmount + $shippingAmount);
 
             $order = Order::create([
                 'order_number' => $orderNumber,
@@ -55,6 +68,11 @@ class OrderService
                 'payment_gateway_id' => $data['payment_gateway_id'] ?? null,
                 'payment_status' => $data['payment_status'] ?? null,
                 'origin' => $data['origin'] ?? Order::ORIGIN_POS,
+                'coupon_id' => $appliedCoupon?->id,
+                'coupon_code' => $appliedCoupon?->code,
+                'discount_amount' => $discountAmount,
+                'referral_code' => $data['referral_code'] ?? null,
+                'referrer_id' => $data['referrer_id'] ?? null,
             ]);
 
             foreach ($orderItems as $itemData) {

@@ -3,32 +3,31 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <h2 class="font-display text-xl font-semibold text-gray-900 dark:text-white">Listagem de categorias</h2>
             <a href="{{ route('catalog.categories.create') }}"
-               class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+               class="inline-flex items-center gap-2 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                 <x-icon name="plus" style="solid" class="w-4 h-4" />
                 Nova categoria
             </a>
         </div>
 
         @if (session('success'))
-            <div class="rounded-lg border border-success/30 bg-success/10 px-4 py-3 text-sm text-success dark:bg-success/20">
+            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 border border-green-200 dark:border-green-800">
                 {{ session('success') }}
             </div>
         @endif
 
-        <div class="overflow-hidden rounded-xl border border-border dark:border-border bg-white dark:bg-surface shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-border dark:divide-border">
-                    <thead class="bg-gray-50 dark:bg-gray-800/50">
-                        <tr>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Nome</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Categoria pai</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Status</th>
-                            <th scope="col" class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border dark:divide-border bg-white dark:bg-surface">
-                        @forelse ($categories as $category)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">Nome</th>
+                        <th scope="col" class="px-4 py-3">Categoria pai</th>
+                        <th scope="col" class="px-4 py-3">Status</th>
+                        <th scope="col" class="px-4 py-3 text-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($categories as $category)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-4 py-3 text-sm font-medium text-gray-900 dark:text-white">{{ $category->name }}</td>
                                 <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">{{ $category->parent?->name ?? '-' }}</td>
                                 <td class="px-4 py-3">
@@ -62,11 +61,10 @@
                                 </td>
                             </tr>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
             @if ($categories->hasPages())
-                <div class="border-t border-border dark:border-border px-4 py-3">
+                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
                     {{ $categories->links() }}
                 </div>
             @endif

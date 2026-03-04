@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
+use App\Models\User;
 use Modules\Catalog\Models\Category;
 use Modules\Catalog\Models\Product;
 use Modules\Payment\Models\Payment;
@@ -20,6 +21,8 @@ class StorefrontController extends Controller
 {
     public function index(Request $request): View
     {
+        $this->handleReferral($request);
+
         $productsQuery = Product::query()
             ->where('is_active', true)
             ->where('stock', '>', 0)
@@ -47,6 +50,8 @@ class StorefrontController extends Controller
 
     public function catalog(Request $request): View
     {
+        $this->handleReferral($request);
+
         $productsQuery = Product::query()
             ->where('is_active', true)
             ->where('stock', '>', 0)
@@ -102,11 +107,27 @@ class StorefrontController extends Controller
             ->with(['brand', 'category'])
             ->firstOrFail();
 
-        return view('storefront::product', compact('product'));
+        $relatedProducts = Product::query()
+            ->where('is_active', true)
+            ->where('stock', '>', 0)
+            ->where('id', '!=', $product->id)
+            ->when(
+                $product->category_id,
+                fn ($query) => $query->where('category_id', $product->category_id)
+            )
+            ->with(['brand', 'category'])
+            ->latest()
+            ->take(8)
+            ->get();
+
+        return view('storefront::product', compact('product', 'relatedProducts'));
     }
 
     public function cart(): View
     {
+        // Apenas garante que eventuais parâmetros de indicação sejam capturados
+        $this->handleReferral(request());
+
         return view('storefront::cart');
     }
 
@@ -180,6 +201,8 @@ class StorefrontController extends Controller
 
     public function checkout(): View
     {
+        $this->handleReferral(request());
+
         return view('storefront::checkout');
     }
 
@@ -192,6 +215,7 @@ class StorefrontController extends Controller
             'payment_method' => ['required', 'in:pix,credit_card,debit_card,cash,boleto'],
             'shipping_method_id' => ['nullable', 'integer', 'exists:shipping_methods,id'],
             'shipping_amount' => ['nullable', 'integer', 'min:0'],
+            'coupon_code' => ['nullable', 'string', 'max:50'],
         ]);
 
         try {
@@ -204,6 +228,9 @@ class StorefrontController extends Controller
                 'status' => Order::STATUS_PENDING,
                 'shipping_method_id' => $validated['shipping_method_id'] ?? null,
                 'shipping_amount' => $validated['shipping_amount'] ?? 0,
+                'coupon_code' => $validated['coupon_code'] ?? null,
+                'referral_code' => session('referral_code'),
+                'referrer_id' => session('referrer_id'),
             ], $validated['items']);
 
             // Resolver gateway de pagamento para o método escolhido
@@ -264,6 +291,24 @@ class StorefrontController extends Controller
                 'success' => false,
                 'message' => 'Erro ao processar o pedido. Tente novamente.',
             ], 500);
+        }
+    }
+
+    protected function handleReferral(Request $request): void
+    {
+        $ref = $request->query('ref');
+
+        if (! $ref) {
+            return;
+        }
+
+        $referrerId = (int) $ref;
+
+        if ($referrerId > 0) {
+            session([
+                'referrer_id' => $referrerId,
+                'referral_code' => (string) $ref,
+            ]);
         }
     }
 }

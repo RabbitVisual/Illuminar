@@ -15,6 +15,7 @@ class Product extends Model
         'sku',
         'barcode',
         'description',
+        'image_path',
         'price',
         'cost_price',
         'stock',
@@ -45,6 +46,11 @@ class Product extends Model
     public function inventoryTransactions(): HasMany
     {
         return $this->hasMany(\Modules\Inventory\Models\InventoryTransaction::class);
+    }
+
+    public function images(): HasMany
+    {
+        return $this->hasMany(ProductImage::class)->orderBy('position');
     }
 
     public function getPriceFormattedAttribute(): string

@@ -18,71 +18,85 @@
 
     <div class="flex-1 grid grid-cols-1 lg:grid-cols-5 gap-4 p-4 min-h-0 overflow-hidden">
         {{-- Coluna Esquerda: Carrinho (60%) --}}
-        <div class="lg:col-span-3 flex flex-col min-h-0 rounded-xl border border-border dark:border-border bg-white dark:bg-surface shadow-sm overflow-hidden">
-            <div class="px-4 py-3 border-b border-border dark:border-border bg-gray-50 dark:bg-gray-800/50">
-                <h2 class="font-display font-semibold text-gray-900 dark:text-white flex items-center gap-2">
-                    <x-icon name="cart-shopping" style="duotone" class="w-5 h-5" />
-                    Carrinho
-                </h2>
-            </div>
-            <div class="flex-1 overflow-auto">
-                <table class="min-w-full divide-y divide-border dark:divide-border" x-show="cart.length > 0">
-                    <thead class="bg-gray-50 dark:bg-gray-800/50 sticky top-0">
-                        <tr>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-gray-400">Produto</th>
-                            <th class="px-4 py-2 text-center text-xs font-medium text-gray-600 dark:text-gray-400 w-28">Qtd</th>
-                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-600 dark:text-gray-400">Preço</th>
-                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-600 dark:text-gray-400">Subtotal</th>
-                            <th class="px-4 py-2 w-12"></th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border dark:divide-border bg-white dark:bg-surface">
-                        <template x-for="(item, index) in cart" :key="item.product_id + '-' + index">
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30">
-                                <td class="px-4 py-3">
-                                    <span class="font-medium text-gray-900 dark:text-white" x-text="item.name"></span>
-                                    <span class="block text-xs text-gray-500 dark:text-gray-400" x-text="item.sku"></span>
-                                </td>
-                                <td class="px-4 py-3">
-                                    <div class="flex items-center justify-center gap-1">
-                                        <button type="button"
-                                                @click="updateQuantity(index, item.quantity - 1)"
-                                                class="rounded-lg p-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300">
-                                            <x-icon name="minus" style="solid" class="w-4 h-4" />
-                                        </button>
-                                        <span class="w-10 text-center font-medium" x-text="item.quantity"></span>
-                                        <button type="button"
-                                                @click="updateQuantity(index, item.quantity + 1)"
-                                                class="rounded-lg p-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300">
-                                            <x-icon name="plus" style="solid" class="w-4 h-4" />
-                                        </button>
-                                    </div>
-                                </td>
-                                <td class="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400" x-text="formatMoney(item.price / 100)"></td>
-                                <td class="px-4 py-3 text-right font-medium text-gray-900 dark:text-white" x-text="formatMoney(item.subtotal / 100)"></td>
-                                <td class="px-4 py-3">
-                                    <button type="button"
-                                            @click="removeFromCart(index)"
-                                            class="rounded-lg p-2 text-danger hover:bg-danger/10"
-                                            aria-label="Remover">
-                                        <x-icon name="trash" style="solid" class="w-4 h-4" />
-                                    </button>
-                                </td>
+        <div class="lg:col-span-3 flex flex-col min-h-0">
+            <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 flex flex-col h-full">
+                <div class="px-4 py-3 border-b border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-800/50 flex items-center justify-between gap-3">
+                    <div>
+                        <h2 class="font-display font-semibold text-gray-900 dark:text-white flex items-center gap-2">
+                            <x-icon name="cart-shopping" style="duotone" class="w-5 h-5" />
+                            Carrinho
+                        </h2>
+                        <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+                            <span x-text="totalItems"></span> itens ·
+                            <span x-text="totalQuantity"></span> unidades
+                        </p>
+                    </div>
+                    <button type="button"
+                            @click="cancelSale()"
+                            class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:border-gray-600">
+                        <x-icon name="xmark" style="solid" class="w-4 h-4" />
+                        Cancelar venda (F4)
+                    </button>
+                </div>
+                <div class="flex-1 overflow-auto">
+                    <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400" x-show="cart.length > 0">
+                        <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400 sticky top-0">
+                            <tr>
+                                <th scope="col" class="px-4 py-2">Produto</th>
+                                <th scope="col" class="px-4 py-2 text-center w-28">Qtd</th>
+                                <th scope="col" class="px-4 py-2 text-right">Preço</th>
+                                <th scope="col" class="px-4 py-2 text-right">Subtotal</th>
+                                <th scope="col" class="px-4 py-2 w-12"></th>
                             </tr>
-                        </template>
-                    </tbody>
-                </table>
-                <div x-show="cart.length === 0" class="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400">
-                    <x-icon name="cart-shopping" style="duotone" class="w-16 h-16 mb-4 opacity-50" />
-                    <p class="font-display text-lg">Carrinho vazio</p>
-                    <p class="text-sm mt-1">Digite o código de barras ou SKU e pressione Enter</p>
+                        </thead>
+                        <tbody>
+                            <template x-for="(item, index) in cart" :key="item.product_id + '-' + index">
+                                <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
+                                    <td class="px-4 py-3">
+                                        <span class="font-medium text-gray-900 dark:text-white" x-text="item.name"></span>
+                                        <span class="block text-xs text-gray-500 dark:text-gray-400" x-text="item.sku"></span>
+                                    </td>
+                                    <td class="px-4 py-3">
+                                        <div class="flex items-center justify-center gap-1">
+                                            <button type="button"
+                                                    @click="updateQuantity(index, item.quantity - 1)"
+                                                    class="rounded-lg p-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300">
+                                                <x-icon name="minus" style="solid" class="w-4 h-4" />
+                                            </button>
+                                            <span class="w-10 text-center font-medium" x-text="item.quantity"></span>
+                                            <button type="button"
+                                                    @click="updateQuantity(index, item.quantity + 1)"
+                                                    class="rounded-lg p-1.5 bg-gray-100 dark:bg-gray-700 hover:bg-gray-200 dark:hover:bg-gray-600 text-gray-700 dark:text-gray-300">
+                                                <x-icon name="plus" style="solid" class="w-4 h-4" />
+                                            </button>
+                                        </div>
+                                    </td>
+                                    <td class="px-4 py-3 text-right text-sm text-gray-600 dark:text-gray-400" x-text="formatMoney(item.price / 100)"></td>
+                                    <td class="px-4 py-3 text-right font-medium text-gray-900 dark:text-white" x-text="formatMoney(item.subtotal / 100)"></td>
+                                    <td class="px-4 py-3">
+                                        <button type="button"
+                                                @click="removeFromCart(index)"
+                                                class="rounded-lg p-2 text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900/20"
+                                                aria-label="Remover">
+                                            <x-icon name="trash" style="solid" class="w-4 h-4" />
+                                        </button>
+                                    </td>
+                                </tr>
+                            </template>
+                        </tbody>
+                    </table>
+                    <div x-show="cart.length === 0" class="flex flex-col items-center justify-center h-64 text-gray-500 dark:text-gray-400">
+                        <x-icon name="cart-shopping" style="duotone" class="w-16 h-16 mb-4 opacity-50" />
+                        <p class="font-display text-lg">Carrinho vazio</p>
+                        <p class="text-sm mt-1">Digite o código de barras ou SKU e pressione Enter</p>
+                    </div>
                 </div>
             </div>
         </div>
 
         {{-- Coluna Direita: Comandos (40%) --}}
         <div class="lg:col-span-2 flex flex-col gap-4 min-h-0">
-            <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-4 shadow-sm">
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <label for="search-input" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Buscar produto (código de barras ou SKU)</label>
                 <input type="text"
                        id="search-input"
@@ -91,29 +105,38 @@
                        @keydown.enter.prevent="search()"
                        placeholder="Passe o código ou digite e pressione Enter"
                        autofocus
-                       class="block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-4 py-3 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent text-lg">
+                       class="bg-gray-50 border border-gray-300 text-gray-900 text-base rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-3 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                <p class="mt-2 text-xs text-gray-500 dark:text-gray-400">
+                    Atalhos: <span class="font-semibold">Enter</span> para buscar/adicionar ·
+                    <span class="font-semibold">F2</span> finalizar ·
+                    <span class="font-semibold">F3</span> focar busca ·
+                    <span class="font-semibold">F4</span> cancelar
+                </p>
             </div>
 
-            <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-4 shadow-sm flex-1 flex flex-col gap-4">
+            <div class="p-4 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 flex-1 flex flex-col gap-4">
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Subtotal</p>
                     <p class="text-2xl font-bold text-gray-900 dark:text-white" x-text="formatMoney(cartTotal / 100)"></p>
                 </div>
                 <div>
                     <p class="text-sm text-gray-600 dark:text-gray-400">Total</p>
-                    <p class="text-3xl font-bold text-primary dark:text-primary" x-text="formatMoney(cartTotal / 100)"></p>
+                    <p class="text-3xl font-bold text-primary-700 dark:text-primary-400" x-text="formatMoney(cartTotal / 100)"></p>
                 </div>
 
                 <div>
                     <label for="payment-method" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">Forma de pagamento</label>
                     <select id="payment-method"
                             x-model="paymentMethod"
-                            class="block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-4 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                         <option value="pix">PIX</option>
                         <option value="credit_card">Cartão de Crédito</option>
                         <option value="debit_card">Cartão de Débito</option>
                         <option value="cash">Dinheiro</option>
                     </select>
+                    <p class="mt-2 text-xs text-gray-500 dark:text-gray-400" x-show="paymentMethod !== 'cash'">
+                        Registre o pagamento na maquininha ou app do provedor e confirme aqui no sistema.
+                    </p>
                 </div>
 
                 <div x-show="paymentMethod === 'cash'" x-cloak>
@@ -123,19 +146,27 @@
                            x-mask="'money'"
                            x-model="amountReceived"
                            placeholder="R$ 0,00"
-                           class="block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-4 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <p x-show="paymentMethod === 'cash' && parseAmountReceived() > 0 && parseAmountReceived() >= cartTotal/100" class="mt-2 text-sm font-medium text-green-600 dark:text-green-400">
                         Troco: <span x-text="formatMoney(Math.max(0, parseAmountReceived() - cartTotal/100))"></span>
                     </p>
                 </div>
 
-                <button type="button"
-                        @click="checkout()"
-                        :disabled="cart.length === 0 || loading"
-                        class="mt-auto w-full py-4 rounded-xl bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white font-display font-bold text-xl flex items-center justify-center gap-2 transition-colors">
-                    <x-icon name="check" style="solid" class="w-6 h-6" />
-                    Finalizar Venda (F2)
-                </button>
+                <div class="mt-auto flex flex-col gap-2">
+                    <button type="button"
+                            @click="checkout()"
+                            :disabled="cart.length === 0 || loading"
+                            class="w-full py-3 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-display font-semibold rounded-lg text-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
+                        <x-icon name="check" style="solid" class="w-5 h-5" />
+                        Finalizar Venda (F2)
+                    </button>
+                    <button type="button"
+                            @click="cancelSale()"
+                            class="w-full inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:border-gray-600">
+                        <x-icon name="ban" style="solid" class="w-4 h-4" />
+                        Cancelar venda (F4)
+                    </button>
+                </div>
             </div>
         </div>
     </div>
@@ -156,6 +187,14 @@ document.addEventListener('alpine:init', () => {
             return this.cart.reduce((sum, item) => sum + item.subtotal, 0);
         },
 
+        get totalItems() {
+            return this.cart.length;
+        },
+
+        get totalQuantity() {
+            return this.cart.reduce((sum, item) => sum + item.quantity, 0);
+        },
+
         init() {
             this.$nextTick(() => this.$refs.searchInput?.focus());
 
@@ -166,6 +205,9 @@ document.addEventListener('alpine:init', () => {
                 } else if (e.key === 'F4') {
                     e.preventDefault();
                     this.cancelSale();
+                } else if (e.key === 'F3') {
+                    e.preventDefault();
+                    this.$refs.searchInput?.focus();
                 }
             };
             document.addEventListener('keydown', this.keydownHandler);

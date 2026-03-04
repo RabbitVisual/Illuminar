@@ -5,40 +5,39 @@
                 Pedidos de recuperação de senha (e-mail ou CPF) e cadastros de novos clientes.
             </p>
             <form method="GET" action="{{ route('admin.security-requests.index') }}" class="flex flex-wrap gap-2">
-                <select name="type" class="rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary">
+                <select name="type" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <option value="">Todos os tipos</option>
                     <option value="password_reset_email" {{ request('type') === 'password_reset_email' ? 'selected' : '' }}>Recuperação (e-mail)</option>
                     <option value="password_reset_cpf" {{ request('type') === 'password_reset_cpf' ? 'selected' : '' }}>Recuperação (CPF)</option>
                     <option value="registration" {{ request('type') === 'registration' ? 'selected' : '' }}>Cadastro</option>
                 </select>
-                <select name="status" class="rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-sm text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary">
+                <select name="status" class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     <option value="">Todos os status</option>
                     <option value="pending" {{ request('status') === 'pending' ? 'selected' : '' }}>Pendente</option>
                     <option value="completed" {{ request('status') === 'completed' ? 'selected' : '' }}>Concluído</option>
                     <option value="expired" {{ request('status') === 'expired' ? 'selected' : '' }}>Expirado</option>
                     <option value="failed" {{ request('status') === 'failed' ? 'selected' : '' }}>Falhou</option>
                 </select>
-                <button type="submit" class="rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90">
+                <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                     Filtrar
                 </button>
             </form>
         </div>
 
-        <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface overflow-hidden shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-800/80">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600 dark:text-gray-400">Data</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600 dark:text-gray-400">Tipo</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600 dark:text-gray-400">E-mail / CPF</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600 dark:text-gray-400">IP</th>
-                            <th class="px-4 py-3 text-left text-xs font-semibold uppercase text-gray-600 dark:text-gray-400">Status</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @forelse ($requests as $req)
-                            <tr class="hover:bg-gray-50/50 dark:hover:bg-gray-700/30">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">Data</th>
+                        <th scope="col" class="px-4 py-3">Tipo</th>
+                        <th scope="col" class="px-4 py-3">E-mail / CPF</th>
+                        <th scope="col" class="px-4 py-3">IP</th>
+                        <th scope="col" class="px-4 py-3">Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($requests as $req)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-4 py-3 text-sm text-gray-900 dark:text-gray-100 whitespace-nowrap">
                                     {{ $req->created_at->format('d/m/Y H:i') }}
                                 </td>
@@ -75,9 +74,8 @@
                                 </td>
                             </tr>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
             @if ($requests->hasPages())
                 <div class="px-4 py-3 border-t border-border dark:border-border">
                     {{ $requests->links() }}

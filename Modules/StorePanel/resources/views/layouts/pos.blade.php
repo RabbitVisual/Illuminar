@@ -34,7 +34,52 @@
     <x-loading-overlay />
 
     <div class="h-screen flex flex-col">
-        @yield('content')
+        <header class="flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-white/95 backdrop-blur dark:bg-gray-900/95 dark:border-gray-800">
+            <div class="flex items-center gap-3">
+                <a href="{{ Route::has('admin.index') ? route('admin.index') : url('/core') }}" class="flex items-center gap-2">
+                    <x-core::logo height="h-7" class="w-auto max-w-[120px]" />
+                </a>
+                <div class="hidden sm:flex flex-col">
+                    <span class="text-xs uppercase tracking-wide text-gray-400 dark:text-gray-500">Ponto de Venda</span>
+                    <span class="text-sm font-medium text-gray-900 dark:text-gray-100">PDV Rápido</span>
+                </div>
+            </div>
+            <div class="flex items-center gap-3">
+                @auth
+                    <div class="hidden sm:flex items-center gap-2 pr-2 border-r border-gray-200 dark:border-gray-700">
+                        <img src="{{ auth()->user()->photo_url }}"
+                             alt="{{ auth()->user()->full_name ?? auth()->user()->email }}"
+                             class="h-8 w-8 rounded-full object-cover border border-primary-500/70 shadow-sm">
+                        <span class="text-xs font-medium text-gray-700 dark:text-gray-200 max-w-[120px] truncate">
+                            {{ auth()->user()->full_name ?? auth()->user()->email }}
+                        </span>
+                    </div>
+                    @if (Route::has('pdv.profile'))
+                        <a href="{{ route('pdv.profile') }}"
+                           class="hidden sm:inline-flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800">
+                            <x-icon name="id-card" style="duotone" class="w-4 h-4" />
+                            <span>Meu perfil</span>
+                        </a>
+                    @endif
+                    <a href="{{ Route::has('admin.index') ? route('admin.index') : url('/core') }}"
+                       class="inline-flex items-center gap-2 rounded-lg border border-gray-200 px-3 py-1.5 text-xs font-medium text-gray-700 hover:bg-gray-50 dark:border-gray-700 dark:text-gray-200 dark:hover:bg-gray-800">
+                        <x-icon name="gauge-high" style="duotone" class="w-4 h-4" />
+                        <span>Painel</span>
+                    </a>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit"
+                                class="inline-flex items-center gap-2 rounded-lg bg-red-600 px-3 py-1.5 text-xs font-medium text-white hover:bg-red-700">
+                            <x-icon name="right-from-bracket" style="solid" class="w-4 h-4" />
+                            <span>Sair</span>
+                        </button>
+                    </form>
+                @endauth
+            </div>
+        </header>
+        <div class="flex-1 flex flex-col min-h-0">
+            @yield('content')
+        </div>
     </div>
 </body>
 </html>

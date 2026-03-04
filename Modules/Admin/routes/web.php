@@ -7,6 +7,9 @@ use Modules\Admin\Http\Controllers\SecuritySettingsController;
 
 Route::middleware(['auth'])->group(function () {
     Route::get('admin', [AdminController::class, 'index'])->name('admin.index');
+    Route::get('admin/profile', [AdminController::class, 'profile'])->name('admin.profile');
+    Route::post('admin/profile', [AdminController::class, 'updateProfile'])->name('admin.profile.update');
+
     Route::middleware(['role:SuperAdmin|Owner'])->prefix('admin')->name('admin.')->group(function () {
         Route::get('security-requests', [SecurityRequestController::class, 'index'])->name('security-requests.index');
         Route::get('settings/security', [SecuritySettingsController::class, 'index'])->name('settings.security');

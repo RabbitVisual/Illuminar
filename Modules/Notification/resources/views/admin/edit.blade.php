@@ -34,11 +34,11 @@
             @csrf
             @method('PUT')
 
-            <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm space-y-4">
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 space-y-4">
                 <div>
                     <label for="subject" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Assunto do e-mail</label>
                     <input type="text" id="subject" name="subject" value="{{ old('subject', $emailTemplate->subject) }}" required
-                           class="block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary">
+                           class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     @error('subject')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
@@ -47,7 +47,7 @@
                 <div>
                     <label for="body" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Corpo do e-mail (Markdown e variáveis permitidos)</label>
                     <textarea id="body" name="body" rows="12" required
-                              class="block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary font-mono text-sm">{{ old('body', $emailTemplate->body) }}</textarea>
+                              class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500 font-mono text-sm">{{ old('body', $emailTemplate->body) }}</textarea>
                     @error('body')
                         <p class="mt-1 text-sm text-red-600 dark:text-red-400">{{ $message }}</p>
                     @enderror
@@ -56,17 +56,17 @@
                 <label class="inline-flex items-center gap-2 text-sm text-gray-700 dark:text-gray-300">
                     <input type="hidden" name="is_active" value="0">
                     <input type="checkbox" name="is_active" value="1" {{ old('is_active', $emailTemplate->is_active) ? 'checked' : '' }}
-                           class="rounded border-border text-primary focus:ring-primary">
+                           class="w-4 h-4 text-primary-600 bg-gray-100 border-gray-300 rounded focus:ring-primary-500 dark:focus:ring-primary-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600">
                     Template ativo (e-mails serão enviados)
                 </label>
             </div>
 
             <div class="flex items-center gap-3">
-                <button type="submit" class="rounded-lg bg-primary px-6 py-2.5 font-medium text-white hover:opacity-90 focus:ring-2 focus:ring-primary focus:ring-offset-2">
+                <button type="submit" class="text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                     Salvar template
                 </button>
                 <a href="{{ route('admin.notification.templates.index') }}"
-                   class="rounded-lg border border-border dark:border-border px-6 py-2.5 font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                   class="rounded-lg border border-gray-300 px-6 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:border-gray-600">
                     Voltar
                 </a>
             </div>

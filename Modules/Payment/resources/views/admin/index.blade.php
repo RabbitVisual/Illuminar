@@ -21,7 +21,7 @@
             </div>
         @endif
 
-        <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm">
+        <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
             <h2 class="font-display font-semibold text-gray-900 dark:text-white mb-4 flex items-center gap-2">
                 <x-icon name="credit-card" style="duotone" class="w-5 h-5" />
                 Provedores Configurados
@@ -29,7 +29,7 @@
 
             <div class="space-y-4">
                 @forelse ($gateways as $gateway)
-                    <div class="flex items-center justify-between gap-4 rounded-lg border border-border dark:border-border p-4 hover:bg-gray-50 dark:hover:bg-gray-800/50 transition-colors">
+                    <div class="flex items-center justify-between gap-4 rounded-lg border border-gray-200 dark:border-gray-700 p-4 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors">
                         <div class="flex items-center gap-4">
                             <div class="flex h-12 w-12 items-center justify-center rounded-xl bg-amber-500/10 dark:bg-amber-400/10 text-amber-600 dark:text-amber-400">
                                 <x-icon name="credit-card" style="duotone" class="w-6 h-6" />
@@ -49,7 +49,7 @@
                             </div>
                         </div>
                         <a href="{{ route('payment.admin.gateways.edit', $gateway) }}"
-                           class="inline-flex items-center gap-2 rounded-lg border border-primary px-4 py-2 text-sm font-medium text-primary hover:bg-primary hover:text-white transition-colors">
+                           class="inline-flex items-center gap-2 rounded-lg border border-primary-600 px-4 py-2 text-sm font-medium text-primary-700 hover:bg-primary-700 hover:text-white dark:text-primary-300 dark:hover:bg-primary-600 dark:focus:ring-primary-800">
                             <x-icon name="pen" style="solid" class="w-4 h-4" />
                             Configurar
                         </a>
@@ -59,14 +59,14 @@
                 @endforelse
             </div>
 
-            <div class="mt-6 pt-6 border-t border-border dark:border-border">
+            <div class="mt-6 pt-6 border-t border-gray-200 dark:border-gray-700">
                 <h3 class="font-display font-semibold text-gray-900 dark:text-white mb-3">Adicionar Provedor</h3>
                 <form method="POST" action="{{ route('payment.admin.gateways.store') }}" class="flex flex-wrap items-end gap-4">
                     @csrf
                     <div>
                         <label for="provider" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Provedor</label>
                         <select id="provider" name="provider" required
-                                class="rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             @foreach ($providers as $key => $label)
                                 <option value="{{ $key }}">{{ $label }}</option>
                             @endforeach
@@ -75,7 +75,7 @@
                     <div>
                         <label for="environment" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Ambiente</label>
                         <select id="environment" name="environment" required
-                                class="rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="sandbox">Sandbox (Testes)</option>
                             <option value="production">Produção</option>
                         </select>

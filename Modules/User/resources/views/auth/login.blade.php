@@ -100,6 +100,32 @@
             </div>
         </form>
 
+        @if (app()->environment('local'))
+            <div class="mt-6 border-t border-gray-200 dark:border-gray-700 pt-4">
+                <p class="mb-2 text-xs font-medium text-gray-500 dark:text-gray-400 flex items-center gap-2">
+                    <x-icon name="wand-magic-sparkles" style="duotone" class="w-4 h-4" />
+                    Acesso rápido (modo dev)
+                </p>
+                <div class="grid grid-cols-1 sm:grid-cols-3 gap-2">
+                    <a href="{{ route('dev-login', 'admin') }}"
+                       class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:border-gray-600">
+                        <x-icon name="user-gear" style="duotone" class="w-4 h-4 text-amber-500" />
+                        Admin demo
+                    </a>
+                    <a href="{{ route('dev-login', 'pdv') }}"
+                       class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:border-gray-600">
+                        <x-icon name="cash-register" style="duotone" class="w-4 h-4 text-emerald-500" />
+                        Caixa PDV demo
+                    </a>
+                    <a href="{{ route('dev-login', 'customer') }}"
+                       class="inline-flex items-center justify-center gap-2 rounded-lg border border-gray-300 px-3 py-2 text-xs font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600 dark:border-gray-600">
+                        <x-icon name="user" style="duotone" class="w-4 h-4 text-blue-500" />
+                        Cliente demo
+                    </a>
+                </div>
+            </div>
+        @endif
+
         <p class="mt-6 text-center text-sm text-gray-600 dark:text-gray-400">
             Ainda não tem conta?
             <a href="{{ route('register') }}" class="font-medium text-amber-600 dark:text-amber-400 hover:underline">Cadastre-se</a>

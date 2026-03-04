@@ -9,8 +9,10 @@ use Illuminate\View\View;
 use Modules\Catalog\Models\Brand;
 use Modules\Catalog\Models\Category;
 use Modules\Catalog\Models\Product;
+use Modules\Catalog\Models\ProductImage;
 use Modules\Core\Helpers\UtilsHelper;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -75,6 +77,9 @@ class ProductController extends Controller
             'power_watts' => ['nullable', 'numeric', 'min:0'],
             'color_temperature_k' => ['nullable', 'integer', 'min:0'],
             'lumens' => ['nullable', 'integer', 'min:0'],
+            'image' => ['nullable', 'image', 'max:2048'],
+            'gallery' => ['nullable', 'array'],
+            'gallery.*' => ['image', 'max:2048'],
         ]);
 
         $price = (int) round((float) UtilsHelper::formatMoneyToDatabase($validated['price']) * 100);
@@ -85,7 +90,7 @@ class ProductController extends Controller
         $slug = Str::slug($validated['name']);
         $slug = Product::where('slug', $slug)->exists() ? $slug . '-' . Str::slug($validated['sku']) : $slug;
 
-        Product::create([
+        $data = [
             'name' => $validated['name'],
             'slug' => $slug,
             'sku' => $validated['sku'],
@@ -100,7 +105,25 @@ class ProductController extends Controller
             'power_watts' => $validated['power_watts'] ?? null,
             'color_temperature_k' => $validated['color_temperature_k'] ?? null,
             'lumens' => $validated['lumens'] ?? null,
-        ]);
+        ];
+
+        if ($request->hasFile('image')) {
+            $data['image_path'] = $request->file('image')->store('products', 'public');
+        }
+
+        $product = Product::create($data);
+
+        if ($request->hasFile('gallery')) {
+            $position = 0;
+            foreach ($request->file('gallery') as $file) {
+                $path = $file->store('product-gallery', 'public');
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'path' => $path,
+                    'position' => $position++,
+                ]);
+            }
+        }
 
         return redirect()->route('catalog.products.index')->with('success', 'Produto criado com sucesso.');
     }
@@ -134,6 +157,11 @@ class ProductController extends Controller
             'power_watts' => ['nullable', 'numeric', 'min:0'],
             'color_temperature_k' => ['nullable', 'integer', 'min:0'],
             'lumens' => ['nullable', 'integer', 'min:0'],
+            'image' => ['nullable', 'image', 'max:2048'],
+            'gallery' => ['nullable', 'array'],
+            'gallery.*' => ['image', 'max:2048'],
+            'remove_images' => ['nullable', 'array'],
+            'remove_images.*' => ['integer', 'exists:product_images,id'],
         ]);
 
         $price = (int) round((float) UtilsHelper::formatMoneyToDatabase($validated['price']) * 100);
@@ -146,7 +174,7 @@ class ProductController extends Controller
             $slug = $slug . '-' . $product->id;
         }
 
-        $product->update([
+        $data = [
             'name' => $validated['name'],
             'slug' => $slug,
             'sku' => $validated['sku'],
@@ -161,7 +189,45 @@ class ProductController extends Controller
             'power_watts' => $validated['power_watts'] ?? null,
             'color_temperature_k' => $validated['color_temperature_k'] ?? null,
             'lumens' => $validated['lumens'] ?? null,
-        ]);
+        ];
+
+        if ($request->hasFile('image')) {
+            if ($product->image_path) {
+                Storage::disk('public')->delete($product->image_path);
+            }
+
+            $data['image_path'] = $request->file('image')->store('products', 'public');
+        }
+
+        // Remover imagens da galeria, se solicitado
+        if ($request->filled('remove_images')) {
+            $imagesToRemove = ProductImage::query()
+                ->where('product_id', $product->id)
+                ->whereIn('id', $request->input('remove_images', []))
+                ->get();
+
+            foreach ($imagesToRemove as $image) {
+                Storage::disk('public')->delete($image->path);
+                $image->delete();
+            }
+        }
+
+        // Adicionar novas imagens à galeria
+        if ($request->hasFile('gallery')) {
+            $currentMaxPosition = (int) $product->images()->max('position');
+            $position = $currentMaxPosition + 1;
+
+            foreach ($request->file('gallery') as $file) {
+                $path = $file->store('product-gallery', 'public');
+                ProductImage::create([
+                    'product_id' => $product->id,
+                    'path' => $path,
+                    'position' => $position++,
+                ]);
+            }
+        }
+
+        $product->update($data);
 
         return redirect()->route('catalog.products.index')->with('success', 'Produto atualizado com sucesso.');
     }

@@ -1,7 +1,9 @@
-<x-core::layouts.master heading="Meu Perfil">
+<x-core::layouts.master heading="Meu Perfil (PDV)">
     <div class="max-w-2xl space-y-6">
         <div class="flex items-center gap-2 text-sm text-gray-600 dark:text-gray-400">
-            <a href="{{ route('customer.index') }}" class="hover:text-primary transition-colors">Meu Painel</a>
+            <a href="{{ route('admin.index') }}" class="hover:text-primary transition-colors">Dashboard</a>
+            <x-icon name="chevron-right" style="solid" class="w-4 h-4" />
+            <a href="{{ route('pdv.index') }}" class="hover:text-primary transition-colors">PDV</a>
             <x-icon name="chevron-right" style="solid" class="w-4 h-4" />
             <span class="text-gray-900 dark:text-white">Meu Perfil</span>
         </div>
@@ -15,7 +17,7 @@
         <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm">
             <form method="POST"
                   enctype="multipart/form-data"
-                  action="{{ route('customer.profile.update') }}"
+                  action="{{ route('pdv.profile.update') }}"
                   x-data="{ loading: false }"
                   x-on:submit="loading = true; window.dispatchEvent(new CustomEvent('start-loading'))">
                 @csrf
@@ -32,7 +34,7 @@
                                 {{ $user->full_name ?? $user->email }}
                             </p>
                             <p class="text-xs text-gray-500 dark:text-gray-400">
-                                Foto de perfil usada em todo o painel e PDV.
+                                Operador identificado em todo o PDV e relatórios internos.
                             </p>
                             <label class="inline-flex items-center gap-2 mt-1 cursor-pointer text-xs sm:text-sm font-medium text-primary-700 dark:text-primary-300">
                                 <x-icon name="camera" style="duotone" class="w-4 h-4" />
@@ -76,29 +78,30 @@
                                 <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                             @enderror
                         </div>
-                        <div>
-                            <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mail</label>
-                            <input type="email"
-                                   id="email"
-                                   value="{{ $user->email }}"
-                                   disabled
-                                   class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-gray-100 dark:bg-gray-800 px-3 py-2 text-gray-500 dark:text-gray-400 cursor-not-allowed">
-                            <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">O e-mail não pode ser alterado.</p>
-                        </div>
+                    </div>
 
-                        <div>
-                            <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Telefone</label>
-                            <input type="text"
-                                   id="phone"
-                                   name="phone"
-                                   value="{{ old('phone', $user->phone) }}"
-                                   x-mask="'phone'"
-                                   class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent @error('phone') border-danger @enderror"
-                                   placeholder="(00) 00000-0000">
-                            @error('phone')
-                                <p class="mt-1 text-sm text-danger">{{ $message }}</p>
-                            @enderror
-                        </div>
+                    <div>
+                        <label for="email" class="block text-sm font-medium text-gray-700 dark:text-gray-300">E-mail</label>
+                        <input type="email"
+                               id="email"
+                               value="{{ $user->email }}"
+                               disabled
+                               class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-gray-100 dark:bg-gray-800 px-3 py-2 text-gray-500 dark:text-gray-400 cursor-not-allowed">
+                        <p class="mt-1 text-xs text-gray-500 dark:text-gray-400">O e-mail não pode ser alterado por aqui.</p>
+                    </div>
+
+                    <div>
+                        <label for="phone" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Telefone</label>
+                        <input type="text"
+                               id="phone"
+                               name="phone"
+                               value="{{ old('phone', $user->phone) }}"
+                               x-mask="'phone'"
+                               class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent @error('phone') border-danger @enderror"
+                               placeholder="(00) 00000-0000">
+                        @error('phone')
+                            <p class="mt-1 text-sm text-danger">{{ $message }}</p>
+                        @enderror
                     </div>
 
                     <div class="pt-4 border-t border-border dark:border-border">
@@ -134,13 +137,14 @@
                         <x-icon name="check" style="solid" class="w-4 h-4" />
                         Salvar alterações
                     </button>
-                    <a href="{{ route('customer.index') }}"
+                    <a href="{{ route('pdv.index') }}"
                        class="inline-flex items-center gap-2 rounded-lg border border-border dark:border-border px-4 py-2 font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                         <x-icon name="arrow-left" style="solid" class="w-4 h-4" />
-                        Voltar
+                        Voltar ao PDV
                     </a>
                 </div>
             </form>
         </div>
     </div>
 </x-core::layouts.master>
+

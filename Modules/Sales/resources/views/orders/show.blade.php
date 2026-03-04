@@ -12,7 +12,7 @@
             </div>
         @endif
 
-        <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface shadow-sm overflow-hidden" id="order-receipt">
+        <div class="bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700 overflow-hidden" id="order-receipt">
             {{-- Cabeçalho estilo fatura --}}
             <div class="border-b border-border dark:border-border px-6 py-6 bg-gray-50 dark:bg-gray-800/50">
                 <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
@@ -34,7 +34,7 @@
                         </span>
                         <a href="{{ route('document.order.receipt', $order->order_number) }}"
                            target="_blank"
-                           class="inline-flex items-center gap-2 rounded-lg border border-border dark:border-border px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors print:hidden">
+                           class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:border-gray-600 print:hidden">
                             <x-icon name="print" style="solid" class="w-4 h-4" />
                             Imprimir Recibo
                         </a>
@@ -54,13 +54,13 @@
             {{-- Itens do pedido --}}
             <div class="px-6 py-4">
                 <h2 class="text-xs font-semibold uppercase tracking-wider text-gray-500 dark:text-gray-400 mb-4">Itens</h2>
-                <table class="min-w-full divide-y divide-border dark:divide-border">
-                    <thead>
+                <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                    <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
                         <tr>
-                            <th class="px-4 py-2 text-left text-xs font-medium text-gray-600 dark:text-gray-400">Produto</th>
-                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-600 dark:text-gray-400">Qtd</th>
-                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-600 dark:text-gray-400">Preço unit.</th>
-                            <th class="px-4 py-2 text-right text-xs font-medium text-gray-600 dark:text-gray-400">Subtotal</th>
+                            <th scope="col" class="px-4 py-3">Produto</th>
+                            <th scope="col" class="px-4 py-3 text-right">Qtd</th>
+                            <th scope="col" class="px-4 py-3 text-right">Preço unit.</th>
+                            <th scope="col" class="px-4 py-3 text-right">Subtotal</th>
                         </tr>
                     </thead>
                     <tbody class="divide-y divide-border dark:divide-border">
@@ -79,18 +79,41 @@
                 </table>
             </div>
 
-            {{-- Total --}}
+            {{-- Total + resumo financeiro --}}
             <div class="px-6 py-4 border-t border-border dark:border-border bg-gray-50 dark:bg-gray-800/50">
-                <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-                    <div class="text-right sm:text-left">
-                        <p class="text-2xl font-bold text-gray-900 dark:text-white">Total: {{ $order->total_formatted }}</p>
+                <div class="flex flex-col lg:flex-row lg:items-start lg:justify-between gap-4">
+                    <div class="space-y-1 text-sm text-gray-700 dark:text-gray-300">
+                        @php
+                            $shippingAmount = $order->shipping_amount ?? 0;
+                            $discountAmount = $order->discount_amount ?? 0;
+                            $subtotalAmount = max(0, $order->total_amount + $discountAmount - $shippingAmount);
+                        @endphp
+                        <p>
+                            <span class="font-medium">Subtotal:</span>
+                            <span>{{ \Modules\Core\Helpers\UtilsHelper::formatMoneyToDisplay($subtotalAmount / 100) }}</span>
+                        </p>
+                        @if ($shippingAmount > 0)
+                            <p>
+                                <span class="font-medium">Frete:</span>
+                                <span>{{ \Modules\Core\Helpers\UtilsHelper::formatMoneyToDisplay($shippingAmount / 100) }}</span>
+                            </p>
+                        @endif
+                        @if ($discountAmount > 0)
+                            <p class="text-emerald-600 dark:text-emerald-400">
+                                <span class="font-medium">Desconto (cupom {{ $order->coupon_code }}):</span>
+                                <span>- {{ \Modules\Core\Helpers\UtilsHelper::formatMoneyToDisplay($discountAmount / 100) }}</span>
+                            </p>
+                        @endif
+                        <p class="mt-2 text-lg font-bold text-gray-900 dark:text-white">
+                            Total: {{ $order->total_formatted }}
+                        </p>
                         @if ($order->payment_method)
                             <p class="text-sm text-gray-600 dark:text-gray-400 mt-1">
                                 Pagamento: {{ ucfirst(str_replace('_', ' ', $order->payment_method)) }}
                             </p>
                         @endif
                     </div>
-                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1 sm:text-right">
+                    <div class="text-sm text-gray-600 dark:text-gray-400 space-y-1 lg:text-right">
                         @if ($order->payment_status)
                             <p>
                                 Status do pagamento:
@@ -104,6 +127,14 @@
                                 Gateway:
                                 <span class="font-medium text-gray-900 dark:text-white">
                                     {{ $order->paymentGateway->provider_label }} ({{ $order->paymentGateway->environment_label }})
+                                </span>
+                            </p>
+                        @endif
+                        @if ($order->referral_code)
+                            <p>
+                                Indicação:
+                                <span class="font-medium text-gray-900 dark:text-white">
+                                    Código {{ $order->referral_code }}
                                 </span>
                             </p>
                         @endif
@@ -124,7 +155,7 @@
 
         {{-- Alterar status --}}
         @if ($order->status !== 'canceled')
-            <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-6 shadow-sm">
+            <div class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <h3 class="font-display font-semibold text-gray-900 dark:text-white mb-4">Alterar status</h3>
                 <form action="{{ route('sales.orders.update-status', $order) }}"
                       method="POST"
@@ -137,7 +168,7 @@
                             <select id="status"
                                     name="status"
                                     required
-                                    class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                                 <option value="pending" {{ $order->status === 'pending' ? 'selected' : '' }}>Pendente</option>
                                 <option value="paid" {{ $order->status === 'paid' ? 'selected' : '' }}>Pago</option>
                                 <option value="shipped" {{ $order->status === 'shipped' ? 'selected' : '' }}>Enviado</option>
@@ -145,7 +176,7 @@
                             </select>
                         </div>
                         <button type="submit"
-                                class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 font-medium text-white hover:opacity-90 transition-opacity">
+                                class="inline-flex items-center gap-2 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                             <x-icon name="check" style="solid" class="w-4 h-4" />
                             Atualizar status
                         </button>

@@ -7,6 +7,7 @@ use App\Models\User;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Modules\Core\Helpers\UtilsHelper;
 use Modules\Sales\Models\Order;
@@ -65,6 +66,7 @@ class CustomerPanelController extends Controller
             'first_name' => ['required', 'string', 'max:255'],
             'last_name' => ['required', 'string', 'max:255'],
             'phone' => ['nullable', 'string', 'max:20'],
+            'photo' => ['nullable', 'image', 'mimes:jpg,jpeg,png,webp', 'max:2048'],
             'password' => ['nullable', 'string', 'min:8', 'confirmed'],
         ];
 
@@ -77,6 +79,16 @@ class CustomerPanelController extends Controller
             'last_name' => $validated['last_name'],
             'phone' => UtilsHelper::onlyDigits($validated['phone'] ?? '') ?: null,
         ];
+
+        if ($request->hasFile('photo')) {
+            $photoPath = $request->file('photo')->store('avatars', 'public');
+
+            if ($user->photo && Storage::disk('public')->exists($user->photo)) {
+                Storage::disk('public')->delete($user->photo);
+            }
+
+            $data['photo'] = $photoPath;
+        }
 
         if (! empty($validated['password'])) {
             $data['password'] = $validated['password'];

@@ -122,9 +122,8 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
                     @forelse ($products as $product)
                         <div class="group storefront-card-hover storefront-product-glow rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800/60 overflow-hidden shadow-sm">
-                            <div class="aspect-[4/3] bg-gradient-to-br from-gray-100 to-gray-50 dark:from-gray-700 dark:to-gray-800 flex items-center justify-center relative overflow-hidden">
-                                <div class="absolute inset-0 bg-gradient-to-t from-amber-500/10 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
-                                <x-icon name="lightbulb" style="duotone" class="storefront-product-icon w-20 h-20 text-gray-400 dark:text-gray-500 transition-all duration-300" />
+                            <div class="relative">
+                                <x-core::product-image :product="$product" aspect="4/3" class="group" />
                                 @if($product->category)
                                     <span class="absolute top-2 left-2 rounded-full bg-amber-500/90 dark:bg-amber-400/90 px-2.5 py-1 text-xs font-medium text-gray-900">
                                         {{ $product->category->name }}
@@ -132,12 +131,14 @@
                                 @endif
                             </div>
                             <div class="p-4 space-y-2">
-                                <h3 class="font-display font-semibold text-gray-900 dark:text-white truncate" title="{{ $product->name }}">
-                                    {{ $product->name }}
-                                </h3>
-                                @if($product->brand)
-                                    <p class="text-xs text-gray-500 dark:text-gray-500">{{ $product->brand->name }}</p>
-                                @endif
+                                <div class="flex items-center justify-between gap-2">
+                                    <h3 class="font-display font-semibold text-gray-900 dark:text-white truncate" title="{{ $product->name }}">
+                                        {{ $product->name }}
+                                    </h3>
+                                    @if($product->brand)
+                                        <x-core::brand-logo :brand="$product->brand" size="xs" />
+                                    @endif
+                                </div>
                                 <p class="mt-1 text-lg font-bold text-amber-600 dark:text-amber-400">
                                     {{ $product->price_formatted }}
                                 </p>

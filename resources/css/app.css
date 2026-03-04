@@ -14,9 +14,11 @@
 @source '../**/*.js';
 @source '../../Modules/**/*.blade.php';
 @source '../../Modules/**/*.js';
+@source '../../node_modules/flowbite';
 
 @plugin '@tailwindcss/forms';
 @plugin '@tailwindcss/typography';
+@plugin 'flowbite/plugin';
 
 /* Define que o dark mode é ativado pela classe .dark no <html> */
 @custom-variant dark (&:where(.dark, .dark *));
@@ -64,14 +66,19 @@
     --font-sans: 'Inter', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
 
 
-    /* Light Mode Colors - Default */
+    /* Light Mode Colors - Default (Brand: amarelo + preto fosco) */
     --color-background: #ffffff;
     --color-surface: #f9fafb;
     --color-text: #111827;
     --color-text-muted: #6b7280;
     --color-border: #e5e7eb;
-    --color-primary: #3b82f6;
-    --color-primary-dark: #2563eb;
+    /* Amarelo como cor principal (inspirado em Amber/Yellow Tailwind) */
+    --color-primary: #facc15;
+    --color-primary-dark: #eab308;
+    --color-primary-300: #fef08a;
+    --color-primary-600: #eab308;
+    --color-primary-700: #ca8a04;
+    --color-primary-800: #854d0e;
     --color-success: #10b981;
     --color-warning: #f59e0b;
     --color-danger: #ef4444;
@@ -79,13 +86,15 @@
 
 /* Dark Mode Colors - Tailwind CSS v4.1 Official Pattern */
 :root.dark {
-    --color-background: #111827;
-    --color-surface: #1f2937;
+    /* Fundo escuro fosco para combinar com o branding */
+    --color-background: #020617;
+    --color-surface: #0b1120;
     --color-text: #f9fafb;
     --color-text-muted: #9ca3af;
-    --color-border: #374151;
-    --color-primary: #60a5fa;
-    --color-primary-dark: #3b82f6;
+    --color-border: #1f2937;
+    /* Primária mantém o amarelo em modo escuro */
+    --color-primary: #facc15;
+    --color-primary-dark: #eab308;
     --color-success: #34d399;
     --color-warning: #fbbf24;
     --color-danger: #f87171;

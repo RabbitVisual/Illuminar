@@ -13,7 +13,29 @@
              shippingLoading: false,
              shippingError: ''
          }">
-        <h1 class="font-display text-2xl font-bold text-gray-900 dark:text-white mb-8">Checkout</h1>
+        <h1 class="font-display text-2xl font-bold text-gray-900 dark:text-white mb-3">Checkout</h1>
+        <ol class="flex items-center gap-3 text-xs sm:text-sm text-gray-500 dark:text-gray-400 mb-8">
+            <li class="flex items-center gap-2">
+                <span class="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                    1
+                </span>
+                <span>Carrinho</span>
+            </li>
+            <x-icon name="chevron-right" style="solid" class="w-3.5 h-3.5" />
+            <li class="flex items-center gap-2">
+                <span class="flex h-6 w-6 items-center justify-center rounded-full border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-800 text-gray-600 dark:text-gray-300">
+                    2
+                </span>
+                <span>Entrega</span>
+            </li>
+            <x-icon name="chevron-right" style="solid" class="w-3.5 h-3.5" />
+            <li class="flex items-center gap-2">
+                <span class="flex h-6 w-6 items-center justify-center rounded-full bg-amber-500 text-gray-900 font-semibold">
+                    3
+                </span>
+                <span class="font-medium text-gray-900 dark:text-white">Pagamento</span>
+            </li>
+        </ol>
 
         <div x-show="success"
              x-cloak
@@ -141,9 +163,14 @@
                     </div>
                 </div>
 
-                {{-- Resumo do Pedido --}}
-                <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6">
-                    <h2 class="font-display text-lg font-semibold text-gray-900 dark:text-white mb-4">Resumo do Pedido</h2>
+                {{-- Resumo do Pedido + Cupom --}}
+                <div class="rounded-xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-6 space-y-4"
+                     x-data="{
+                         couponCode: '',
+                         appliedCoupon: null,
+                         couponDiscount: 0,
+                     }">
+                    <h2 class="font-display text-lg font-semibold text-gray-900 dark:text-white mb-2">Resumo do Pedido</h2>
                     <ul class="space-y-3 divide-y divide-gray-200 dark:divide-gray-700">
                         <template x-for="item in $parent.cart" :key="item.product_id">
                             <li class="flex justify-between py-2">
@@ -152,12 +179,57 @@
                             </li>
                         </template>
                     </ul>
-                    <div x-show="selectedShipping" x-cloak class="flex justify-between py-2 text-gray-700 dark:text-gray-300">
-                        <span>Frete (<span x-text="selectedShipping ? selectedShipping.name : ''"></span>)</span>
-                        <span class="font-medium" x-text="selectedShipping ? selectedShipping.price_formatted : ''"></span>
+
+                    <div class="pt-3 space-y-3">
+                        <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+                            <div class="flex-1">
+                                <label for="coupon_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
+                                    Cupom de desconto
+                                </label>
+                                <input id="coupon_code"
+                                       type="text"
+                                       x-model="couponCode"
+                                       placeholder="Digite seu cupom (ex: BEMVINDO10)"
+                                       class="block w-full rounded-lg border border-gray-300 dark:border-gray-600 bg-white dark:bg-gray-700 px-3 py-2 text-sm text-gray-900 dark:text-gray-100 uppercase">
+                            </div>
+                            <div class="sm:pt-6">
+                                <button type="button"
+                                        @click="
+                                            appliedCoupon = couponCode.trim().toUpperCase() || null;
+                                            // Cálculo aproximado apenas para exibição (validação real é feita no servidor)
+                                            couponDiscount = 0;
+                                        "
+                                        class="inline-flex items-center gap-2 rounded-lg bg-amber-500 px-4 py-2 text-sm font-medium text-gray-900 hover:bg-amber-400 transition-colors">
+                                    <x-icon name="percent" style="solid" class="w-4 h-4" />
+                                    Aplicar cupom
+                                </button>
+                            </div>
+                        </div>
+                        <p class="text-xs text-gray-500 dark:text-gray-400">
+                            O desconto será validado e aplicado definitivamente ao finalizar a compra.
+                        </p>
                     </div>
+
+                    <div class="mt-2 space-y-1 text-sm text-gray-700 dark:text-gray-300">
+                        <div class="flex justify-between">
+                            <span>Subtotal</span>
+                            <span class="font-medium" x-text="$parent.formatMoney($parent.getCartTotal())"></span>
+                        </div>
+                        <div x-show="selectedShipping" x-cloak class="flex justify-between">
+                            <span>Frete (<span x-text="selectedShipping ? selectedShipping.name : ''"></span>)</span>
+                            <span class="font-medium" x-text="selectedShipping ? selectedShipping.price_formatted : ''"></span>
+                        </div>
+                        <div x-show="appliedCoupon" x-cloak class="flex justify-between text-emerald-600 dark:text-emerald-400">
+                            <span x-text="'Cupom ' + appliedCoupon"></span>
+                            <span class="font-medium" x-text="couponDiscount ? '- ' + $parent.formatMoney(couponDiscount) : '- R$ 0,00'"></span>
+                        </div>
+                    </div>
+
                     <p class="mt-4 pt-4 border-t border-gray-200 dark:border-gray-700 text-lg font-bold text-gray-900 dark:text-white">
-                        Total: <span x-text="$parent.formatMoney($parent.getCartTotal() + (selectedShipping ? selectedShipping.price : 0))"></span>
+                        Total estimado:
+                        <span
+                            x-text="$parent.formatMoney($parent.getCartTotal() + (selectedShipping ? selectedShipping.price : 0) - couponDiscount)">
+                        </span>
                     </p>
                 </div>
 
@@ -172,11 +244,14 @@
                             'X-CSRF-TOKEN': document.querySelector('meta[name=csrf-token]').content,
                             'Accept': 'application/json'
                         },
+                        const couponField = document.querySelector('#coupon_code');
+
                         body: JSON.stringify({
                             items: $parent.cart.map(i => ({ product_id: i.product_id, quantity: i.quantity })),
                             payment_method: document.querySelector('[name=payment_method]:checked').value,
                             shipping_method_id: selectedShipping ? selectedShipping.id : null,
-                            shipping_amount: selectedShipping ? selectedShipping.price : 0
+                            shipping_amount: selectedShipping ? selectedShipping.price : 0,
+                            coupon_code: couponField ? couponField.value.toUpperCase() : null,
                         })
                     })
                     .then(r => r.json())
@@ -222,6 +297,10 @@
                         <label class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50">
                             <input type="radio" name="payment_method" value="boleto" class="text-primary">
                             <span class="text-gray-700 dark:text-gray-300">Boleto</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 rounded-lg border border-gray-200 dark:border-gray-600 cursor-pointer hover:bg-gray-50 dark:hover:bg-gray-800/50">
+                            <input type="radio" name="payment_method" value="cash" class="text-primary">
+                            <span class="text-gray-700 dark:text-gray-300">Pagamento na loja / Dinheiro (modo demo)</span>
                         </label>
                     </div>
 

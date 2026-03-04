@@ -8,6 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Modules\Core\Helpers\UtilsHelper;
+use Modules\Sales\Models\Coupon;
 use Modules\Shipping\Models\Shipment;
 use Modules\Shipping\Models\ShippingMethod;
 
@@ -37,6 +38,11 @@ class Order extends Model
         'payment_gateway_id',
         'payment_status',
         'origin',
+        'coupon_id',
+        'coupon_code',
+        'discount_amount',
+        'referral_code',
+        'referrer_id',
     ];
 
     public function user(): BelongsTo
@@ -72,6 +78,16 @@ class Order extends Model
     public function paymentGateway(): BelongsTo
     {
         return $this->belongsTo(\Modules\Payment\Models\PaymentGateway::class, 'payment_gateway_id');
+    }
+
+    public function coupon(): BelongsTo
+    {
+        return $this->belongsTo(Coupon::class);
+    }
+
+    public function referrer(): BelongsTo
+    {
+        return $this->belongsTo(User::class, 'referrer_id');
     }
 
     public function getTotalFormattedAttribute(): string

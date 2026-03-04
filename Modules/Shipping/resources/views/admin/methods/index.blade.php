@@ -7,7 +7,7 @@
                 <span class="text-gray-900 dark:text-white">Métodos de Entrega</span>
             </div>
             <a href="{{ route('shipping.methods.create') }}"
-               class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+               class="inline-flex items-center gap-2 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                 <x-icon name="plus" style="solid" class="w-4 h-4" />
                 Novo Método
             </a>
@@ -20,23 +20,22 @@
             </div>
         @endif
 
-        <div class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface overflow-hidden shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200 dark:divide-gray-700">
-                    <thead class="bg-gray-50 dark:bg-gray-800">
-                        <tr>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Nome</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Tipo</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Preço Base</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Prazo (dias)</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Cobertura</th>
-                            <th class="px-4 py-3 text-left text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Status</th>
-                            <th class="px-4 py-3 text-right text-xs font-medium uppercase text-gray-600 dark:text-gray-400">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-gray-200 dark:divide-gray-700">
-                        @forelse ($methods as $method)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/50">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">Nome</th>
+                        <th scope="col" class="px-4 py-3">Tipo</th>
+                        <th scope="col" class="px-4 py-3">Preço Base</th>
+                        <th scope="col" class="px-4 py-3">Prazo (dias)</th>
+                        <th scope="col" class="px-4 py-3">Cobertura</th>
+                        <th scope="col" class="px-4 py-3">Status</th>
+                        <th scope="col" class="px-4 py-3 text-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($methods as $method)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-4 py-3 font-medium text-gray-900 dark:text-white">{{ $method->name }}</td>
                                 <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ $method->type_label }}</td>
                                 <td class="px-4 py-3 text-gray-600 dark:text-gray-400">{{ $method->base_price_formatted }}</td>
@@ -51,12 +50,12 @@
                                 </td>
                                 <td class="px-4 py-3 text-right">
                                     <a href="{{ route('shipping.methods.edit', $method) }}"
-                                       class="text-primary hover:underline text-sm">Editar</a>
+                                       class="inline-flex items-center gap-1.5 rounded-lg border border-gray-300 px-3 py-1.5 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700 dark:border-gray-600">Editar</a>
                                     <form method="POST" action="{{ route('shipping.methods.destroy', $method) }}" class="inline ml-2"
                                           onsubmit="return confirm('Remover este método de entrega?');">
                                         @csrf
                                         @method('DELETE')
-                                        <button type="submit" class="text-danger hover:underline text-sm">Excluir</button>
+                                        <button type="submit" class="text-red-600 hover:underline dark:text-red-400 text-sm">Excluir</button>
                                     </form>
                                 </td>
                             </tr>
@@ -67,11 +66,10 @@
                                 </td>
                             </tr>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
             @if ($methods->hasPages())
-                <div class="px-4 py-3 border-t border-border dark:border-border">
+                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
                     {{ $methods->links() }}
                 </div>
             @endif

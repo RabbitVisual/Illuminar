@@ -3,14 +3,14 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <h2 class="font-display text-xl font-semibold text-gray-900 dark:text-white">Listagem de produtos</h2>
             <a href="{{ route('catalog.products.create') }}"
-               class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+               class="inline-flex items-center gap-2 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                 <x-icon name="plus" style="solid" class="w-4 h-4" />
                 Novo produto
             </a>
         </div>
 
         @if (session('success'))
-            <div class="rounded-lg border border-success/30 bg-success/10 px-4 py-3 text-sm text-success dark:bg-success/20">
+            <div class="p-4 mb-4 text-sm text-green-800 rounded-lg bg-green-50 dark:bg-gray-800 dark:text-green-400 border border-green-200 dark:border-green-800">
                 {{ session('success') }}
             </div>
         @endif
@@ -22,7 +22,7 @@
             <div class="flex items-center gap-2">
                 <button type="button"
                         @click="searchOpen = !searchOpen"
-                        class="inline-flex items-center gap-2 rounded-lg border border-border dark:border-border px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                        class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:border-gray-600 dark:hover:bg-gray-600">
                     <x-icon name="magnifying-glass" style="solid" class="w-4 h-4" />
                     <span x-text="searchOpen ? 'Ocultar busca' : 'Busca avançada'">Busca avançada</span>
                     <x-icon name="chevron-down" style="solid" class="w-4 h-4 transition-transform" x-bind:class="{ 'rotate-180': searchOpen }" />
@@ -39,22 +39,22 @@
                   x-transition:leave-end="opacity-0 -translate-y-2"
                   action="{{ route('catalog.products.index') }}"
                   method="GET"
-                  class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-4 shadow-sm">
+                  class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div class="sm:col-span-2 lg:col-span-1">
-                        <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Busca (Nome/SKU/Código)</label>
+                        <label for="search" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Busca (Nome/SKU/Código)</label>
                         <input type="text"
                                id="search"
                                name="search"
                                value="{{ request('search') }}"
                                placeholder="Digite para buscar..."
-                               class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     </div>
                     <div>
-                        <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Categoria</label>
+                        <label for="category_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Categoria</label>
                         <select id="category_id"
                                 name="category_id"
-                                class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="">Todas</option>
                             @foreach ($categories as $category)
                                 <option value="{{ $category->id }}" {{ request('category_id') == $category->id ? 'selected' : '' }}>{{ $category->name }}</option>
@@ -62,10 +62,10 @@
                         </select>
                     </div>
                     <div>
-                        <label for="brand_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Marca</label>
+                        <label for="brand_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">Marca</label>
                         <select id="brand_id"
                                 name="brand_id"
-                                class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="">Todas</option>
                             @foreach ($brands as $brand)
                                 <option value="{{ $brand->id }}" {{ request('brand_id') == $brand->id ? 'selected' : '' }}>{{ $brand->name }}</option>
@@ -73,10 +73,19 @@
                         </select>
                     </div>
                     <div>
-                        <label for="color_temperature_k" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Temperatura de cor (K)</label>
+                        <label for="color_temperature_k" class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1 flex items-center gap-1">
+                            Temperatura de cor (K)
+                            <span data-tooltip-target="tooltip-temp" class="cursor-help">
+                                <x-icon name="circle-info" style="duotone" class="w-4 h-4 text-gray-400" />
+                            </span>
+                        </label>
+                        <div id="tooltip-temp" role="tooltip" class="absolute z-50 invisible inline-block px-3 py-2 text-sm font-medium text-white transition-opacity duration-300 bg-gray-900 rounded-lg shadow-sm opacity-0 tooltip dark:bg-gray-700">
+                            Digite 3000K para luz quente, 4000K neutra ou 6000K para luz fria.
+                            <div class="tooltip-arrow" data-popper-arrow></div>
+                        </div>
                         <select id="color_temperature_k"
                                 name="color_temperature_k"
-                                class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="">Todas</option>
                             @foreach ($colorTemperatures as $temp)
                                 <option value="{{ $temp }}" {{ request('color_temperature_k') == $temp ? 'selected' : '' }}>{{ $temp }}K</option>
@@ -86,34 +95,33 @@
                 </div>
                 <div class="mt-4 flex gap-2">
                     <button type="submit"
-                            class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+                            class="inline-flex items-center gap-2 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                         <x-icon name="magnifying-glass" style="solid" class="w-4 h-4" />
                         Filtrar
                     </button>
                     <a href="{{ route('catalog.products.index') }}"
-                       class="inline-flex items-center gap-2 rounded-lg border border-border dark:border-border px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
+                       class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2.5 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:border-gray-600">
                         Limpar
                     </a>
                 </div>
             </form>
         </div>
 
-        <div class="overflow-hidden rounded-xl border border-border dark:border-border bg-white dark:bg-surface shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-border dark:divide-border">
-                    <thead class="bg-gray-50 dark:bg-gray-800/50">
-                        <tr>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Produto</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">SKU</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Categoria</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Preço</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Status</th>
-                            <th scope="col" class="px-4 py-3 text-right text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Ações</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border dark:divide-border bg-white dark:bg-surface">
-                        @forelse ($products as $product)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">Produto</th>
+                        <th scope="col" class="px-4 py-3">SKU</th>
+                        <th scope="col" class="px-4 py-3">Categoria</th>
+                        <th scope="col" class="px-4 py-3">Preço</th>
+                        <th scope="col" class="px-4 py-3">Status</th>
+                        <th scope="col" class="px-4 py-3 text-right">Ações</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($products as $product)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-4 py-3">
                                     <div class="text-sm font-medium text-gray-900 dark:text-white">{{ $product->name }}</div>
                                     @if ($product->brand)
@@ -154,11 +162,10 @@
                                 </td>
                             </tr>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
             @if ($products->hasPages())
-                <div class="border-t border-border dark:border-border px-4 py-3">
+                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
                     {{ $products->links() }}
                 </div>
             @endif

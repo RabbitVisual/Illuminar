@@ -3,7 +3,7 @@
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
             <h2 class="font-display text-xl font-semibold text-gray-900 dark:text-white">Relatório Kardex</h2>
             <a href="{{ route('inventory.transactions.create') }}"
-               class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+               class="inline-flex items-center gap-2 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                 <x-icon name="plus" style="solid" class="w-4 h-4" />
                 Nova movimentação
             </a>
@@ -39,13 +39,13 @@
                   x-transition:leave-end="opacity-0 -translate-y-2"
                   action="{{ route('inventory.transactions.index') }}"
                   method="GET"
-                  class="rounded-xl border border-border dark:border-border bg-white dark:bg-surface p-4 shadow-sm">
+                  class="p-6 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700">
                 <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
                     <div>
                         <label for="product_id" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Produto</label>
                         <select id="product_id"
                                 name="product_id"
-                                class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="">Todos</option>
                             @foreach ($products as $product)
                                 <option value="{{ $product->id }}" {{ request('product_id') == $product->id ? 'selected' : '' }}>{{ $product->name }} ({{ $product->sku }})</option>
@@ -56,7 +56,7 @@
                         <label for="type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
                         <select id="type"
                                 name="type"
-                                class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="">Todos</option>
                             <option value="in" {{ request('type') == 'in' ? 'selected' : '' }}>Entrada</option>
                             <option value="out" {{ request('type') == 'out' ? 'selected' : '' }}>Saída</option>
@@ -68,7 +68,7 @@
                                id="date_from"
                                name="date_from"
                                value="{{ request('date_from') }}"
-                               class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     </div>
                     <div>
                         <label for="date_to" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data final</label>
@@ -76,12 +76,12 @@
                                id="date_to"
                                name="date_to"
                                value="{{ request('date_to') }}"
-                               class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary focus:border-transparent">
+                               class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                     </div>
                 </div>
-                <div class="mt-4 flex gap-2">
+                <div class="mt-4 flex flex-wrap gap-2">
                     <button type="submit"
-                            class="inline-flex items-center gap-2 rounded-lg bg-primary px-4 py-2 text-sm font-medium text-white hover:opacity-90 transition-opacity">
+                            class="inline-flex items-center gap-2 text-white bg-primary-700 hover:bg-primary-800 focus:ring-4 focus:ring-primary-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-primary-600 dark:hover:bg-primary-700 focus:outline-none dark:focus:ring-primary-800">
                         <x-icon name="magnifying-glass" style="solid" class="w-4 h-4" />
                         Filtrar
                     </button>
@@ -89,26 +89,49 @@
                        class="inline-flex items-center gap-2 rounded-lg border border-border dark:border-border px-4 py-2 text-sm font-medium text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-800 transition-colors">
                         Limpar
                     </a>
+                    <button type="submit"
+                            name="export"
+                            value="csv"
+                            class="inline-flex items-center gap-2 rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium text-gray-700 hover:bg-gray-100 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600 dark:border-gray-600">
+                        <x-icon name="file-export" style="duotone" class="w-4 h-4" />
+                        Exportar CSV
+                    </button>
                 </div>
             </form>
         </div>
 
-        <div class="overflow-hidden rounded-xl border border-border dark:border-border bg-white dark:bg-surface shadow-sm">
-            <div class="overflow-x-auto">
-                <table class="min-w-full divide-y divide-border dark:divide-border">
-                    <thead class="bg-gray-50 dark:bg-gray-800/50">
-                        <tr>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Data/Hora</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Produto</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Tipo</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Quantidade</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Responsável</th>
-                            <th scope="col" class="px-4 py-3 text-left text-xs font-medium uppercase tracking-wider text-gray-600 dark:text-gray-400">Descrição</th>
-                        </tr>
-                    </thead>
-                    <tbody class="divide-y divide-border dark:divide-border bg-white dark:bg-surface">
-                        @forelse ($transactions as $transaction)
-                            <tr class="hover:bg-gray-50 dark:hover:bg-gray-800/30 transition-colors">
+        @isset($stats)
+            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Movimentações no período</p>
+                    <p class="mt-1 text-lg font-semibold text-gray-900 dark:text-white">{{ $stats['total_movements'] }}</p>
+                </div>
+                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Total de entradas</p>
+                    <p class="mt-1 text-lg font-semibold text-green-600 dark:text-green-400">+{{ $stats['total_in'] }}</p>
+                </div>
+                <div class="p-4 bg-white border border-gray-200 rounded-lg shadow-sm dark:bg-gray-800 dark:border-gray-700">
+                    <p class="text-xs font-medium text-gray-500 dark:text-gray-400">Total de saídas</p>
+                    <p class="mt-1 text-lg font-semibold text-red-600 dark:text-red-400">-{{ $stats['total_out'] }}</p>
+                </div>
+            </div>
+        @endisset
+
+        <div class="relative overflow-x-auto shadow-md sm:rounded-lg bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700">
+            <table class="w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400">
+                <thead class="text-xs text-gray-700 uppercase bg-gray-50 dark:bg-gray-700 dark:text-gray-400">
+                    <tr>
+                        <th scope="col" class="px-4 py-3">Data/Hora</th>
+                        <th scope="col" class="px-4 py-3">Produto</th>
+                        <th scope="col" class="px-4 py-3">Tipo</th>
+                        <th scope="col" class="px-4 py-3">Quantidade</th>
+                        <th scope="col" class="px-4 py-3">Responsável</th>
+                        <th scope="col" class="px-4 py-3">Descrição</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse ($transactions as $transaction)
+                        <tr class="bg-white border-b dark:bg-gray-800 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-600">
                                 <td class="px-4 py-3 text-sm text-gray-600 dark:text-gray-400">
                                     {{ $transaction->created_at->format('d/m/Y H:i') }}
                                 </td>
@@ -138,11 +161,10 @@
                                 </td>
                             </tr>
                         @endforelse
-                    </tbody>
-                </table>
-            </div>
+                </tbody>
+            </table>
             @if ($transactions->hasPages())
-                <div class="border-t border-border dark:border-border px-4 py-3">
+                <div class="px-4 py-3 border-t border-gray-200 dark:border-gray-700">
                     {{ $transactions->links() }}
                 </div>
             @endif
