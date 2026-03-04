@@ -113,17 +113,11 @@
                                 data-tooltip-target="tooltip-user-menu">
                             <span class="sr-only">Abrir menu do usuário</span>
                             <div class="flex items-center gap-2 px-2 py-1.5">
-                                @if (! empty($authUser?->photo))
-                                    <img src="{{ $authUser->photo_url }}"
-                                         alt="{{ $authUser->name ?? $authUser->full_name ?? $authUser->email }}"
-                                         class="h-8 w-8 rounded-full object-cover border border-primary-500/70 shadow-sm">
-                                @else
-                                    <div class="flex h-8 w-8 items-center justify-center rounded-full bg-primary-600 text-white font-semibold">
-                                        {{ strtoupper(substr($authUser->name ?? ($authUser->full_name ?? 'U'), 0, 2)) }}
-                                    </div>
-                                @endif
+                                <img src="{{ $authUser->photo_url }}?v={{ $authUser->updated_at?->timestamp ?? time() }}"
+                                     alt="{{ $authUser->full_name }}"
+                                     class="h-8 w-8 rounded-full object-cover border border-primary-500/70 shadow-sm bg-primary-600">
                                 <span class="hidden sm:block text-gray-800 dark:text-gray-100 max-w-[140px] truncate">
-                                    {{ $authUser->name ?? $authUser->full_name ?? $authUser->email }}
+                                    {{ $authUser->full_name }}
                                 </span>
                                 <x-icon name="angle-down" style="solid" class="hidden sm:block w-3 h-3 text-gray-500 dark:text-gray-400" />
                             </div>
@@ -137,9 +131,9 @@
                         <div class="z-50 hidden my-4 text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow dark:bg-gray-700 dark:divide-gray-600"
                              id="user-dropdown">
                             <div class="px-4 py-3">
-                                <p class="text-sm text-gray-900 dark:text-white">{{ auth()->user()->name }}</p>
+                                <p class="text-sm text-gray-900 dark:text-white">{{ $authUser->full_name }}</p>
                                 <p class="text-sm font-medium text-gray-500 truncate dark:text-gray-400">
-                                    {{ auth()->user()->email }}
+                                    {{ $authUser->email }}
                                 </p>
                             </div>
                             <ul class="py-2" aria-labelledby="user-menu-button">

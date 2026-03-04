@@ -47,9 +47,9 @@
             <div class="flex items-center gap-3">
                 @auth
                     <div class="hidden sm:flex items-center gap-2 pr-2 border-r border-gray-200 dark:border-gray-700">
-                        <img src="{{ auth()->user()->photo_url }}"
-                             alt="{{ auth()->user()->full_name ?? auth()->user()->email }}"
-                             class="h-8 w-8 rounded-full object-cover border border-primary-500/70 shadow-sm">
+                        <img src="{{ auth()->user()->photo_url }}?v={{ auth()->user()->updated_at?->timestamp ?? time() }}"
+                             alt="{{ auth()->user()->full_name }}"
+                             class="h-8 w-8 rounded-full object-cover border border-primary-500/70 shadow-sm bg-primary-600">
                         <span class="text-xs font-medium text-gray-700 dark:text-gray-200 max-w-[120px] truncate">
                             {{ auth()->user()->full_name ?? auth()->user()->email }}
                         </span>

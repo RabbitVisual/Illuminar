@@ -88,7 +88,15 @@ class User extends Authenticatable
      */
     public function getFullNameAttribute(): string
     {
-        return "{$this->first_name} {$this->last_name}";
+        return trim("{$this->first_name} {$this->last_name}") ?: (string) $this->email;
+    }
+
+    /**
+     * Alias for full_name (compatibility with layouts that use ->name).
+     */
+    public function getNameAttribute(): string
+    {
+        return $this->full_name;
     }
 
     /**
@@ -97,5 +105,21 @@ class User extends Authenticatable
     public function getPhotoUrlAttribute(): string
     {
         return $this->photo ? asset('storage/' . $this->photo) : asset('assets/images/default-avatar.png');
+    }
+
+    /**
+     * Document (CPF/CNPJ) formatted for display in forms.
+     */
+    public function getDocumentFormattedAttribute(): ?string
+    {
+        $digits = preg_replace('/\D/', '', (string) $this->document);
+        if (strlen($digits) === 11) {
+            return preg_replace('/(\d{3})(\d{3})(\d{3})(\d{2})/', '$1.$2.$3-$4', $digits);
+        }
+        if (strlen($digits) === 14) {
+            return preg_replace('/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/', '$1.$2.$3/$4-$5', $digits);
+        }
+
+        return $this->document;
     }
 }

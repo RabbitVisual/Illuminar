@@ -103,6 +103,152 @@
                             <p class="mt-1 text-sm text-danger">{{ $message }}</p>
                         @enderror
                     </div>
+                    <div>
+                        <label for="phone_secondary" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Telefone secundário</label>
+                        <input type="text" id="phone_secondary" name="phone_secondary" value="{{ old('phone_secondary', $user->phone_secondary) }}"
+                               x-mask="'phone'" class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('phone_secondary') border-danger @enderror" placeholder="(00) 00000-0000">
+                        @error('phone_secondary')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                    </div>
+                    <div>
+                        <label for="birth_date" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Data de nascimento</label>
+                        <input type="date" id="birth_date" name="birth_date" value="{{ old('birth_date', $user->birth_date?->format('Y-m-d')) }}"
+                               class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('birth_date') border-danger @enderror">
+                        @error('birth_date')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                    </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-border dark:border-border" x-data="{ document_type: '{{ old('document_type', $user->document_type) }}' }">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Documento</h3>
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label for="document_type" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Tipo</label>
+                                <select id="document_type" name="document_type" x-model="document_type"
+                                        class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('document_type') border-danger @enderror">
+                                    <option value="cpf" {{ old('document_type', $user->document_type) === 'cpf' ? 'selected' : '' }}>CPF</option>
+                                    <option value="cnpj" {{ old('document_type', $user->document_type) === 'cnpj' ? 'selected' : '' }}>CNPJ</option>
+                                </select>
+                                @error('document_type')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label for="document" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CPF / CNPJ</label>
+                                <input type="text" id="document" name="document" value="{{ old('document', $user->document_formatted ?? $user->document) }}"
+                                       x-mask="document_type === 'cnpj' ? '99.999.999/9999-99' : '999.999.999-99'"
+                                       class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('document') border-danger @enderror" :placeholder="document_type === 'cnpj' ? '00.000.000/0001-00' : '000.000.000-00'">
+                                @error('document')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                            </div>
+                        </div>
+                        <div class="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4" x-show="document_type === 'cnpj'" x-cloak style="display: none;">
+                            <div class="sm:col-span-2">
+                                <label for="company_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Razão social</label>
+                                <input type="text" id="company_name" name="company_name" value="{{ old('company_name', $user->company_name) }}"
+                                       class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('company_name') border-danger @enderror" placeholder="Nome da empresa">
+                                @error('company_name')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label for="trade_name" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Nome fantasia</label>
+                                <input type="text" id="trade_name" name="trade_name" value="{{ old('trade_name', $user->trade_name) }}"
+                                       class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('trade_name') border-danger @enderror">
+                                @error('trade_name')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label for="state_registration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Inscrição estadual</label>
+                                <input type="text" id="state_registration" name="state_registration" value="{{ old('state_registration', $user->state_registration) }}"
+                                       class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('state_registration') border-danger @enderror">
+                                @error('state_registration')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                            </div>
+                            <div>
+                                <label for="municipal_registration" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Inscrição municipal</label>
+                                <input type="text" id="municipal_registration" name="municipal_registration" value="{{ old('municipal_registration', $user->municipal_registration) }}"
+                                       class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('municipal_registration') border-danger @enderror">
+                                @error('municipal_registration')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-border dark:border-border">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Endereço</h3>
+                        <div class="space-y-4">
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                                <div>
+                                    <label for="postal_code" class="block text-sm font-medium text-gray-700 dark:text-gray-300">CEP</label>
+                                    <input type="text" id="postal_code" name="postal_code" value="{{ old('postal_code', $user->postal_code) }}"
+                                           x-mask="'99999-999'" class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('postal_code') border-danger @enderror" placeholder="00000-000">
+                                    @error('postal_code')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                                </div>
+                                <div class="sm:col-span-2">
+                                    <label for="street" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Logradouro</label>
+                                    <input type="text" id="street" name="street" value="{{ old('street', $user->street) }}"
+                                           class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('street') border-danger @enderror" placeholder="Rua, avenida">
+                                    @error('street')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-4 gap-4">
+                                <div>
+                                    <label for="number" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Número</label>
+                                    <input type="text" id="number" name="number" value="{{ old('number', $user->number) }}"
+                                           class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('number') border-danger @enderror">
+                                    @error('number')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                                </div>
+                                <div>
+                                    <label for="complement" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Complemento</label>
+                                    <input type="text" id="complement" name="complement" value="{{ old('complement', $user->complement) }}"
+                                           class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('complement') border-danger @enderror">
+                                    @error('complement')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                                </div>
+                                <div>
+                                    <label for="neighborhood" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Bairro</label>
+                                    <input type="text" id="neighborhood" name="neighborhood" value="{{ old('neighborhood', $user->neighborhood) }}"
+                                           class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('neighborhood') border-danger @enderror">
+                                    @error('neighborhood')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                                </div>
+                                <div>
+                                    <label for="city" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Cidade</label>
+                                    <input type="text" id="city" name="city" value="{{ old('city', $user->city) }}"
+                                           class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary @error('city') border-danger @enderror">
+                                    @error('city')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                                <div>
+                                    <label for="state" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Estado (UF)</label>
+                                    <input type="text" id="state" name="state" value="{{ old('state', $user->state) }}" maxlength="2"
+                                           class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary uppercase @error('state') border-danger @enderror" placeholder="SP">
+                                    @error('state')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                                </div>
+                                <div>
+                                    <label for="country" class="block text-sm font-medium text-gray-700 dark:text-gray-300">País</label>
+                                    <input type="text" id="country" name="country" value="{{ old('country', $user->country ?? 'BR') }}" maxlength="2"
+                                           class="mt-1 block w-full rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary uppercase @error('country') border-danger @enderror" placeholder="BR">
+                                    @error('country')<p class="mt-1 text-sm text-danger">{{ $message }}</p>@enderror
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="pt-4 border-t border-border dark:border-border">
+                        <h3 class="text-sm font-semibold text-gray-900 dark:text-white mb-3">Preferências</h3>
+                        <div class="flex flex-wrap gap-4">
+                            <label class="inline-flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="newsletter" value="1" {{ old('newsletter', $user->newsletter) ? 'checked' : '' }}
+                                       class="rounded border-border dark:border-border text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Receber newsletter</span>
+                            </label>
+                            <label class="inline-flex items-center gap-2 cursor-pointer">
+                                <input type="checkbox" name="accepts_marketing" value="1" {{ old('accepts_marketing', $user->accepts_marketing) ? 'checked' : '' }}
+                                       class="rounded border-border dark:border-border text-primary focus:ring-primary">
+                                <span class="text-sm text-gray-700 dark:text-gray-300">Aceitar marketing</span>
+                            </label>
+                            <div>
+                                <label for="preferred_contact" class="block text-sm font-medium text-gray-700 dark:text-gray-300">Preferência de contato</label>
+                                <select id="preferred_contact" name="preferred_contact"
+                                        class="mt-1 rounded-lg border border-border dark:border-border bg-white dark:bg-surface px-3 py-2 text-gray-900 dark:text-gray-100 focus:ring-2 focus:ring-primary text-sm">
+                                    <option value="email" {{ old('preferred_contact', $user->preferred_contact) === 'email' ? 'selected' : '' }}>E-mail</option>
+                                    <option value="phone" {{ old('preferred_contact', $user->preferred_contact) === 'phone' ? 'selected' : '' }}>Telefone</option>
+                                    <option value="whatsapp" {{ old('preferred_contact', $user->preferred_contact) === 'whatsapp' ? 'selected' : '' }}>WhatsApp</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
 
                     <div class="pt-4 border-t border-border dark:border-border">
                         <h3 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">Alterar senha</h3>
